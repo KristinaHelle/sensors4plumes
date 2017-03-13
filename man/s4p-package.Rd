@@ -1,6 +1,6 @@
-\name{s4p-package}
-\alias{s4p-package}
-\alias{s4p}
+\name{sensors4plumes-package}
+\alias{sensors4plumes-package}
+\alias{sensors4plumes}
 \docType{package}
 \title{
 Test and optimise sampling designs based on plume simulations
@@ -15,7 +15,7 @@ The package provides functions to load such simulations automatically. To handle
 }
 \details{
 \tabular{ll}{
-Package: \tab s4p\cr
+Package: \tab sensors4plumes\cr
 Type: \tab Package\cr
 Version: \tab 0.0.1\cr
 Date: \tab 2014-11-18\cr

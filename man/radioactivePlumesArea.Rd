@@ -53,9 +53,9 @@ K.B. Helle, T.O. M{\"u}ller, P. Astrup, J.E. Dyve (2014). Automatic Optimisation
 data(radioactivePlumes_area)
 # data are taken from files, the paths need to be updated
 # radioactivePlumes_area = changeSimulationsPath(RadioactivePlumes_area,
-# c(paste0(path.package("s4p"),"/extdata/radioactivePlumes_area_finaldose.grd"),
-#  paste0(path.package("s4p"),"/extdata/radioactivePlumes_area_maxdose.grd"),
-#  paste0(path.package("s4p"),"/extdata/radioactivePlumes_area_time.grd")))
+# c(paste0(path.package("sensors4plumes"),"/extdata/radioactivePlumes_area_finaldose.grd"),
+#  paste0(path.package("sensors4plumes"),"/extdata/radioactivePlumes_area_maxdose.grd"),
+#  paste0(path.package("sensors4plumes"),"/extdata/radioactivePlumes_area_time.grd")))
 
 spplot(RadioactivePlumes_area, zcol = 2)
 }

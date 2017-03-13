@@ -20,7 +20,5 @@ data(SimulationsSmall)
 
 \examples{
 data(SimulationsSmall)
-
-spplot(SimulationsSmall, zcol = 2)
 }
 \keyword{datasets}
