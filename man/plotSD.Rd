@@ -38,7 +38,7 @@ plotSD(simulations, SD,
 }
 
 \value{
-The function generates plots (main and point key missing) and returns a list of \code{\link[trellis]{trellis}} objects (including main and keys).
+The function generates plots (main and point key missing) and returns a list of \code{trellis} objects (including main and keys).
 }
 
 \author{Kristina B. Helle, \email{kristina.helle@uni-muenster.de}}
