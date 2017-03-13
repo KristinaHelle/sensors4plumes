@@ -47,31 +47,31 @@ measurementsResult = function(
   return(out)
 }
 
-x1 = function(x, nout = 1){
-  x
-}
-prodNeg1 = function(x, nout = 1){
-  prod(1-x)
-}
-meanWeight_totalDose1 = function(x, weight = 1, nout = 1)
-{
-  mean(x * weight$totalDose)/mean(weight$totalDose)
-}
-sumUndetected = function(x, weight_l = 1, weight_p = 1, nout = nLocations(simulations))
-{
-  nout = nrow(weight_l)
-  detectableAsMatrix = matrix(x, nrow = nrow(weight_l), byrow = TRUE)
-  detectableUndetected = detectableAsMatrix[,which(weight_p$result_plumes == 1), drop = FALSE]
-  if (dim(detectableUndetected)[2] >= 1){
-    map = apply(FUN = sum, X = detectableUndetected, MARGIN = 1)  
-  } else {
-    map = rep(0, nout)
-  }
-  
-  return(map)
-}
 
 singleDetection = function(simulations, locations){
+ x1 = function(x, nout = 1){
+   x
+ }
+ prodNeg1 = function(x, nout = 1){
+   prod(1-x)
+ }
+ meanWeight_totalDose1 = function(x, weight = 1, nout = 1)
+ {
+   mean(x * weight$totalDose)/mean(weight$totalDose)
+ }
+ sumUndetected = function(x, weight_l = 1, weight_p = 1, nout = nLocations(simulations))
+ {
+   nout = nrow(weight_l)
+   detectableAsMatrix = matrix(x, nrow = nrow(weight_l), byrow = TRUE)
+   detectableUndetected = detectableAsMatrix[,which(weight_p$result_plumes == 1), drop = FALSE]
+   if (dim(detectableUndetected)[2] >= 1){
+     map = apply(FUN = sum, X = detectableUndetected, MARGIN = 1)  
+   } else {
+     map = rep(0, nout)
+   }
+  
+   return(map)
+ }
  sD = replaceDefault(measurementsResult, newDefaults = list(
    kinds = "detectable",
    fun_p = prodNeg1,

@@ -12,11 +12,11 @@
 
 %\alias{subsetSDF}
 %\alias{areaSDF}
-\alias{coordinates, SpatialDataFrame}
-\alias{proj4string, SpatialDataFrame}
-\alias{bbox, SpatialDataFrame}
-\alias{spplot, SpatialDataFrame}
-\alias{length, SpatialDataFrame}
+\alias{coordinates,SpatialDataFrame-method}
+\alias{proj4string,SpatialDataFrame-method}
+\alias{bbox,SpatialDataFrame-method}
+\alias{spplot,SpatialDataFrame-method}
+\alias{length,SpatialDataFrame-method}
 \alias{is.SpatialDataFrame}
 
 \title{Class "SpatialDataFrame" }
@@ -48,28 +48,6 @@ Besides it contains two classes specific to \code{sensors4plumes}:
 
 \link{SpatialPolygridDataFrame}: These objects are similar to those from \link[sp]{SpatialGridDataFrame-class}, but several grid cells may refer to the same attributes in the data frame.
 }
-
-\section{Slots}{
-  \describe{
-    \item{\code{data}:}{object of class \link[base]{data.frame}; it contains the data, one row per spatial object}
-    \item{\code{bbox}:}{bounding box of the spatial object}
-    \item{\code{proj4string}:}{object of class \link[sp]{CRS-class}; projection of the spatial object}
-  }  
-Further slots indicate the spatial reference, they differ among classes:
-      \bold{SpatialIndexDataFrame: }{\code{index}}; 
-      
-      \bold{SpatialPointsDataFrame: }{\code{coords}, \code{coords.nrs}};
-      
-      \bold{SpatialPixelsDataFrame: }{\code{coords}, \code{coords.nrs}, \code{grid}, \code{grid.index}};
-      
-%      \bold{SpatialGridDataFrame: }{\code{grid}};
-      
-      \bold{SpatialPolygridDataFrame: }{\code{index}, \code{grid}};
-      
-      \bold{SpatialPolygonsDataFrame: }{\code{polygons}, \code{plotOrder}};
-      
-      \bold{SpatialLinesDataFrame: }{\code{lines}}.    
-    }
 
 
 

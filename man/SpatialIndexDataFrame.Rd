@@ -98,8 +98,7 @@ SIndexDF2 = as(USArrests,"SpatialIndexDataFrame")
 # spplot
 spplot(SIndexDF1, zcol = c("b", "c"), col.regions = grey.colors(10))
 
-# cbind, rbind
+# cbind
 SIndexDF3 = cbind(SIndexDF1, SIndexDF1)
-SIndexDF4 = rbind(SIndexDF1, SIndexDF1)
 }
 %\keyword{}
