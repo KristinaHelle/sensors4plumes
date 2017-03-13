@@ -1,5 +1,5 @@
 library(testthat)
-library(s4p)
+library(sensors4plumes)
 
 source("dename.R")
 

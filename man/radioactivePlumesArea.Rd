@@ -45,7 +45,7 @@ data(radioactivePlumes_area)
 }
 
 \references{
-K.B. Helle, T.O. M{\"u}ller, P. Astrup, J.E. Dyve (2014). Automatic Optimisation of Gamma Dose Rate Sensor Networks: The DETECT Optimisation Tool. Computers \& Geosciences (66), 158–167.
+K.B. Helle, T.O. M{\"u}ller, P. Astrup, J.E. Dyve (2014). Automatic Optimisation of Gamma Dose Rate Sensor Networks: The DETECT Optimisation Tool. Computers \& Geosciences (66), 158-167.
 }
 
 

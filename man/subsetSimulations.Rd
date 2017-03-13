@@ -1,7 +1,6 @@
 \name{subset.Simulations}
 
 \alias{subset.Simulations}
-\alias{subset,Simulations-method}
 \alias{subset}
 
 \title{
@@ -11,7 +10,7 @@ Subsetting Simulations
 Return subsets of \code{\link{Simulations}}, subsetting by \code{plumes}, \code{locations}, the kinds of \code{values} or by the columns of data associated with \code{plumes} or \code{locations} -- possibly combined.
 }
 \usage{
-subset(x, ..., locations, plumes, values, dataLocations, dataPlumes, 
+\method{subset}{Simulations}(x, ..., locations, plumes, values, dataLocations, dataPlumes, 
   saveName, saveDir = ".", overwrite = FALSE, valuesOnly = FALSE)
 }
 

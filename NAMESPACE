@@ -1,6 +1,14 @@
+importFrom("grDevices", "dev.off", "grey.colors", "png",
+             "terrain.colors")
+importFrom("graphics", "box", "mtext", "par", "points")
+importFrom("methods", "as", "is", "new", "slot")
+importFrom("stats", "as.formula", "median", "runif")
+importFrom("utils", "read.table")
+
 import(sp)
 import(raster)
 import(gstat)
+import(lattice)
 #importFrom("latticeExtra", trellis.par.set, draw.colorkey, simpleKey, trellis.focus, panel.identify)
 #importFrom("lattice", trellis.par.set, draw.colorkey, simpleKey, trellis.focus, panel.identify)
 importFrom("conf.design", factorize)
@@ -11,7 +19,8 @@ importFrom("stats", na.omit)
 importFrom("graphics", axis)#  image, 
 importFrom("genalg", rbga.bin)
 importFrom("methods", setClass, setValidity, setAs, setMethod, setClassUnion)
-#importFrom("emdist", emd2d) # earth mover distance
+importFrom("emdist", emd2d) # earth mover distance
+
 exportClasses(SpatialPolygridDataFrame,
               SpatialIndexDataFrame,
               SpatialDataFrame,
@@ -30,7 +39,6 @@ export(nLocations,
        plot.Simulations,
        cbind.Simulations,
        SDF2simulations,
-       subset.Simulations,
        loadSimulations,
        extractSpatialDataFrame,
        changeSimulationsPath,
