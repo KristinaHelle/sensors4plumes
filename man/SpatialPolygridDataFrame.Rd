@@ -121,7 +121,8 @@ spatialGridDataFrame1 = SpatialGridDataFrame(grid = spatialGrid1, data = dataFra
 s = as(spatialGridDataFrame1, "SpatialPolygridDataFrame")
 
 # coerce back (name of coordinates may change)
-spatialGridDataFrame2 = as(SPolygridDF2, "SpatialGridDataFrame")
+#spatialGridDataFrame2 = as(SPolygridDF2, "SpatialGridDataFrame")
+spatialGridDataFrame2 = as(s, "SpatialGridDataFrame")
 
 #- - - - coerce from SpatialPointsDataFrame - - - - - - - #
 # from irregular points, grid is created, cells are assigned values of nearest point
@@ -140,7 +141,8 @@ points(coordinates(SPolygridDF3))
 
 # - - - - - - - - - - - - - proj4string - - - - - - - - - - - -  #
 # only to retrieve projection attributes
-proj4string(SPolygridDF2)
+#proj4string(SPolygridDF2)
+proj4string(s)
 proj4string(SPolygridDF3)
 # - - - - - - - - - - - - - proj4string - - - - - - - - - - - -  #
 bbox(SPolygridDF3)
@@ -152,7 +154,8 @@ spplot(SPolygridDF4, zcol = "a", col.regions = rainbow(16),
   sp.layout = list("sp.points", spatialPointsDataFrame2@coords, col = 8))
 
 # - - - - - - - - - - - - cbind - - - - - - - - - - - - - - - - #
-SPolygridDF5 = cbind(SPolygridDF2, SPolygridDF4) 
+#SPolygridDF5 = cbind(SPolygridDF2, SPolygridDF4) 
+SPolygridDF5 = cbind(s, SPolygridDF4) 
 
 }
 \keyword{classes}
