@@ -1,0 +1,25 @@
+[general] 
+creator=R package 'raster' 
+created= 2015-07-08 15:36:10 
+[georeference] 
+nrows= 10 
+ncols= 10 
+xmin= 0 
+ymin= 0 
+xmax= 1 
+ymax= 1 
+projection= NA 
+[data] 
+datatype= FLT8S 
+byteorder= little 
+nbands= 3 
+bandorder= BIL 
+minvalue= -3.00741142254516:-3.21868405480342:-2.20963191659165 
+maxvalue= 2.26651034065991:1.90272698465921:2.3962476296913 
+nodatavalue= -1.7e+308 
+[legend] 
+legendtype=  
+values=  
+color=  
+[description] 
+layername= sourceB.date1_typea:sourceB.date2_typea:sourceB.date3_typea 

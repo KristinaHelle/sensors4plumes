@@ -1,0 +1,87 @@
+import(sp)
+import(raster)
+import(gstat)
+#importFrom("latticeExtra", trellis.par.set, draw.colorkey, simpleKey, trellis.focus, panel.identify)
+#importFrom("lattice", trellis.par.set, draw.colorkey, simpleKey, trellis.focus, panel.identify)
+importFrom("conf.design", factorize)
+importFrom("FNN", get.knnx)
+importFrom("rgdal", writeGDAL)
+importFrom("automap", autofitVariogram)
+importFrom("stats", na.omit)
+importFrom("graphics", axis)#  image, 
+importFrom("genalg", rbga.bin)
+importFrom("methods", setClass, setValidity, setAs, setMethod, setClassUnion)
+#importFrom("emdist", emd2d) # earth mover distance
+exportClasses(SpatialPolygridDataFrame,
+              SpatialIndexDataFrame,
+              SpatialDataFrame,
+              Simulations
+              )
+export(nLocations,
+       nPlumes,
+       nKinds,
+       SpatialIndexDataFrame,
+       cbind.SpatialIndexDataFrame,
+       SpatialPolygridDataFrame,
+       cbind.SpatialPolygridDataFrame,
+       points2polygrid,
+       polygrid2grid,
+       Simulations,
+       plot.Simulations,
+       cbind.Simulations,
+       SDF2simulations,
+       subset.Simulations,
+       loadSimulations,
+       extractSpatialDataFrame,
+       changeSimulationsPath,
+       copySimulations,
+       summaryPlumes,
+       summaryLocations,
+       weightedMean,
+       replaceDefault,
+       simulationsApply,
+       fitMedianVariogram,
+       interpolate,
+       idw0z,
+       absError,
+       absErrorMap,
+       delineationError,
+       delineationErrorMap,
+       interpolationError,
+       minimalDistance,
+       krigingVariance,
+       spatialSpread,
+       measurementsResult,
+       singleDetection,
+       multipleDetection,
+       earlyDetection,
+       optimiseSD_greedy,
+       optimiseSD_ssa,
+       optimiseSD_genetic,
+       optimiseSD_global,
+       optimiseSD_manual,
+       optimiseSD,
+       plotSD,
+       optimisationCurve,
+       SDLonLat,
+       similaritySD,
+       spplotLog,
+       interpol0reg
+       )
+exportMethods(spplot,
+              coordinates,
+              proj4string,
+              subsetSDF,
+              areaSDF,
+              length
+              )
+S3method(cbind, SpatialPolygridDataFrame)
+S3method(cbind, SpatialIndexDataFrame)
+S3method(cbind, Simulations)
+S3method(subset, Simulations)
+S3method(plot, Simulations)
+#exportPattern("^[[:alpha:]]+")
+
+#S3method(subsetSDF, SpatialPolygridDataFrame)
+#S3method(subset, SpatialIndexDataFrame)
+#export(subsetSDF, areaSDF)
