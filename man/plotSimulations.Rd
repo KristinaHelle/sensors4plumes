@@ -10,7 +10,7 @@ Plot overview of \code{simulations}.
 Generate a common plot for the values associated with \code{locations} and with \code{plumes} and the \code{values}. 
 }
 \usage{
-plot(x, ..., zcol = 1, main = "", col = terrain.colors(100), maxpixels = 1e+7)
+\method{plot}{Simulations}(x, ..., zcol = 1, main = "", col = terrain.colors(100), maxpixels = 1e+7)
 }
 
 \arguments{

@@ -47,35 +47,43 @@ measurementsResult = function(
   return(out)
 }
 
-singleDetection = replaceDefault(measurementsResult, newDefaults = list(
-  kinds = "detectable",
-  fun_p = function(x, nout = 1)
-    {
-    prod(1-x)
-    },
-  fun_Rp = function(x, weight = 1, nout = 1)
-    {
-    mean(x * weight$totalDose)/mean(weight$totalDose)
-  },
-  fun_pl = function(x, nout = 1){
-    x
-  },
-  fun_Rpl = function(x, weight_l = 1, weight_p = 1, nout = nLocations(simulations))
-    {
-    nout = nrow(weight_l)
-    detectableAsMatrix = matrix(x, nrow = nrow(weight_l), byrow = TRUE)
-    detectableUndetected = detectableAsMatrix[,which(weight_p$result_plumes == 1), drop = FALSE]
-    if (dim(detectableUndetected)[2] >= 1){
-      map = apply(FUN = sum, X = detectableUndetected, MARGIN = 1)  
-    } else {
-      map = rep(0, nout)
-    }
-    
-    return(map)
-  }),
-  type = "costFun.optimiseSD")[[1]]  
+x1 = function(x, nout = 1){
+  x
+}
+prodNeg1 = function(x, nout = 1){
+  prod(1-x)
+}
+meanWeight_totalDose1 = function(x, weight = 1, nout = 1)
+{
+  mean(x * weight$totalDose)/mean(weight$totalDose)
+}
+sumUndetected = function(x, weight_l = 1, weight_p = 1, nout = nLocations(simulations))
+{
+  nout = nrow(weight_l)
+  detectableAsMatrix = matrix(x, nrow = nrow(weight_l), byrow = TRUE)
+  detectableUndetected = detectableAsMatrix[,which(weight_p$result_plumes == 1), drop = FALSE]
+  if (dim(detectableUndetected)[2] >= 1){
+    map = apply(FUN = sum, X = detectableUndetected, MARGIN = 1)  
+  } else {
+    map = rep(0, nout)
+  }
+  
+  return(map)
+}
 
-multipleDetection = replaceDefault(measurementsResult, newDefaults = list(
+singleDetection = function(simulations, locations){
+ sD = replaceDefault(measurementsResult, newDefaults = list(
+   kinds = "detectable",
+   fun_p = prodNeg1,
+   fun_Rp = meanWeight_totalDose1,
+   fun_pl = x1,
+   fun_Rpl = sumUndetected),
+   type = "costFun.optimiseSD")[[1]](simulations = simulations, locations = locations)
+  return(sD)
+}  
+
+multipleDetection = function(simulations, locations){
+  mD = replaceDefault(measurementsResult, newDefaults = list(
   kinds = "detectable",
   fun_p = function(x, nout = 1)
     {
@@ -86,20 +94,24 @@ multipleDetection = replaceDefault(measurementsResult, newDefaults = list(
     y = (weight$nDetectable - x)/weight$nDetectable
     mean(y)
   }),
-  type = "costFun.optimiseSD")[[1]] 
+  type = "costFun.optimiseSD")[[1]](simulations = simulations, locations = locations)
+  return(mD)
+}  
 
-earlyDetection = replaceDefault(measurementsResult, newDefaults = list(
-  kinds = "time",
-  fun_p = function(x, nout = 1)
+earlyDetection = function(simulations, locations){
+  eD = replaceDefault(measurementsResult, newDefaults = list(
+    kinds = "time",
+    fun_p = function(x, nout = 1)
     {
-    minX = min(x, na.rm = TRUE)
+      minX = min(x, na.rm = TRUE)
     },
-  fun_Rp = function(x, nout = 1, weight = 1, 
-                    notDetected = 6.0480e+05 * 2)
+    fun_Rp = function(x, nout = 1, weight = 1, 
+                      notDetected = 6.0480e+05 * 2)
     {
-    xFinite = x - weight$earliestDetection
-    xFinite[is.infinite(x)] = notDetected
-    out = mean(xFinite)/notDetected
+      xFinite = x - weight$earliestDetection
+      xFinite[is.infinite(x)] = notDetected
+      out = mean(xFinite)/notDetected
     }),
-  type = "costFun.optimiseSD")[[1]]
-
+    type = "costFun.optimiseSD")[[1]](simulations = simulations, locations = locations)
+  return(eD)
+}

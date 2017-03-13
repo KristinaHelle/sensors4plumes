@@ -10,7 +10,7 @@ Subsetting Simulations
 Return subsets of \code{\link{Simulations}}, subsetting by \code{plumes}, \code{locations}, the kinds of \code{values} or by the columns of data associated with \code{plumes} or \code{locations} -- possibly combined.
 }
 \usage{
-\method{subset}{Simulations}(x, ..., locations, plumes, values, dataLocations, dataPlumes, 
+\method{subset}{Simulations}(x, ..., locations, plumes, kinds, dataLocations, dataPlumes, 
   saveName, saveDir = ".", overwrite = FALSE, valuesOnly = FALSE)
 }
 
@@ -19,7 +19,7 @@ Return subsets of \code{\link{Simulations}}, subsetting by \code{plumes}, \code{
   \item{...}{parameters to be forwarded}
   \item{locations}{indices of \code{locations} to keep}
   \item{plumes}{indices of \code{plumes} to keep}
-  \item{values}{indices of kinds of \code{values} to keep}
+  \item{kinds}{indices of kinds of \code{values} to keep}
   \item{dataLocations}{indices of the data associated with the \code{locations} to keep}
   \item{dataPlumes}{indices of the data associated with the \code{plumes} to keep}  
   \item{saveName}{name for saving the new \code{raster} files for the \code{values} if they cannot be kept in memory (without suffix)}
@@ -47,7 +47,7 @@ data(SimulationsSmall)
 
 SimulationsSmall_a = subset(SimulationsSmall, locations = c(2,4,6,8))
 SimulationsSmall_b = subset(SimulationsSmall, 
-                            locations = 1:5, plumes = c(2,4), values = 1, 
+                            locations = 1:5, plumes = c(2,4), kinds = 1, 
                             dataPlumes = 1:2)
                             
 # effect of 'valuesOnly'

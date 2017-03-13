@@ -31,8 +31,8 @@ If \code{simulations} is in memory, it has no effect.
 data(radioactivePlumes_area)
 # data are taken from files, the paths need to be updated
 radioactivePlumes_area = changeSimulationsPath(radioactivePlumes_area,
-c(paste0(path.package("s4p"),"/extdata/radioactivePlumes_area_finaldose.grd"),
-  paste0(path.package("s4p"),"/extdata/radioactivePlumes_area_maxdose.grd"),
-  paste0(path.package("s4p"),"/extdata/radioactivePlumes_area_time.grd"))
+c(paste0(path.package("sensors4plumes"),"/extdata/radioactivePlumes_area_finaldose.grd"),
+  paste0(path.package("sensors4plumes"),"/extdata/radioactivePlumes_area_maxdose.grd"),
+  paste0(path.package("sensors4plumes"),"/extdata/radioactivePlumes_area_time.grd"))
 )
 }

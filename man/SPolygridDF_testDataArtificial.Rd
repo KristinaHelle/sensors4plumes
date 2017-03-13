@@ -36,8 +36,8 @@ data(SLinesDF)
 \examples{
 data(SPolygridDF)
 
-spplot(SPolygridDF, zcol = 2, 
-       sp.layout = list("sp.points", coordinates(SPolygridDF)))
+spplot(SPolygridDF, zcol = "b", 
+       sp.layout = list("sp.points", SpatialPoints(coordinates(SPolygridDF))))
 
 data(SIndexDF)
 spplot(SIndexDF)

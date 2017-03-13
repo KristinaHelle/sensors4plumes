@@ -92,7 +92,7 @@ cbind.SpatialIndexDataFrame = function(...){
   return(newObj)
 }  
    
-rbind.SpatialIndexDataFrame = function(...){ 
+rbindSpatialIndexDataFrame = function(...){ 
   dots = list(...)
   n = length(dots)
   if (n >= 1){

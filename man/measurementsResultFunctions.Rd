@@ -18,69 +18,13 @@ fraction of possible additional detections: given a plume can be detected in 10 
 }
 
 \usage{
-singleDetection(simulations, locations, 
-  kinds = "detectable",
-  fun_p = function(x, nout = 1)
-    {
-      prod(1-x)
-    },
-  fun_Rp = function(x, weight = 1, nout = 1)
-    {
-      mean(x * weight$totalDose)/mean(weight$totalDose)
-    },
-  fun_pl = function(x, nout = 1)
-    {
-      x
-    },
-  fun_Rpl = function(x, weight_l = 1, weight_p = 1, nout = nLocations(simulations))
-    {
-      nout = nrow(weight_l)
-      detectableAsMatrix = matrix(x, nrow = nrow(weight_l), byrow = TRUE)
-      detectableUndetected = detectableAsMatrix[,which(weight_p$result_plumes == 1), drop = FALSE]
-      if (dim(detectableUndetected)[2] >= 1){
-        map = apply(FUN = sum, X = detectableUndetected, MARGIN = 1)  
-      } else {
-        map = rep(0, nout)
-      }
-      return(map)
-    }
-  )
-
-
-multipleDetection(simulations, locations, 
-  kinds = "detectable",
-  fun_p = function(x, nout = 1)
-  {
-    sum(x)
-  },
-  fun_Rp = function(x, weight = 1, nout = 1)
-  {
-    y = (weight$nDetectable - x)/weight$nDetectable
-    mean(y)
-  })
-
-earlyDetection(simulations, locations, 
-  kinds = "time",
-  fun_p = function(x, nout = 1)
-  {
-    minX = min(x, na.rm = TRUE)
-  },
-  fun_Rp = function(x, nout = 1, weight = 1, 
-                    notDetected = 6.0480e+05 * 2){
-    xFinite = x - weight$earliestDetection
-    xFinite[is.infinite(x)] = notDetected
-    out = mean(xFinite)/notDetected
-  })
-  
+singleDetection(simulations, locations)
+multipleDetection(simulations, locations)
+earlyDetection(simulations, locations)  
 }
 \arguments{
   \item{simulations}{\code{Simulations} object, must contain the required data, see details.}
   \item{locations}{indices of \code{locations}, sensor positions}% multiple, invalid, order?
-  \item{kinds}{index or name of the layer of \code{simulations@values} to be used}
-  \item{fun_p}{\code{function} for plume-wise summary; forwarded to \code{\link{simulationsApply}} -- see there for details}
-  \item{fun_Rp}{\code{function} to summarise the result of \code{fun_p}; forwarded to \code{\link{simulationsApply}}}
-  \item{fun_pl}{\code{function} for value-wise processing; forwarded to \code{\link{simulationsApply}}}
-  \item{fun_Rpl}{\code{function} to summarise the results of \code{fun_pl}; forwarded to \code{\link{simulationsApply}}}
 }
 %\details{
 %For these cost functions assume that for a set of plumes \eqn{p \in P} the dose rate \eqn{r_p(x,t)} is known for all locations of interest \eqn{x \in X} and time steps \eqn{t \in T}. A plume is detected when \eqn{r_p(x,t) \geq r_{threshold}} for a threshold dose rate \eqn{r_{threshold}}. For the first two functions we only take into account if plumes are detected (exceed a threshold \eqn{r_{threshold}}) at all, no matter when: 

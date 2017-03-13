@@ -9,7 +9,7 @@ Given a \code{\link{Simulations}} object and indices of locations it returns \co
 SDLonLat(simulations, SD)
 }
 \arguments{
-  \item{Simulations}{a \code{\link{Simulations}} object}
+  \item{simulations}{a \code{\link{Simulations}} object}
   \item{SD}{vector of locations indices or matrix (with SDs in rows) or list}
 }
 \value{

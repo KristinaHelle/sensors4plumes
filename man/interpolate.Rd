@@ -28,6 +28,11 @@ idw0z(formula = z ~ 1, data, newdata, y, idp = 2)
   \item{tmpfile}{ filename for the raster file in case the result does not fit into memory; if \code{FALSE} the function stops with a warning and does not create a file }
 \item{overwrite}{ boolean, if the file at \code{tmpfile} may be overwritten } 
 \item{chunksize}{ maximal number of cells to be processed at once -- forwarded to \code{\link[raster]{blockSize}} inside }
+\item{formula}{ formula that defines the dependent variable as linear model of independent variables, forwarded to \code{\link[gstat]{idw0}} -- see also there, default is no independent variables}
+\item{data}{data frame with dependent variable and coordinates, forwarded to \code{\link[gstat]{idw0}} -- see also there}
+\item{newdata}{data frame or Spatial object with prediction locations, forwarded to \code{\link[gstat]{idw0}} -- see also there}
+\item{y}{matrix, forwarded to \code{\link[gstat]{idw0}} -- see also there}
+\item{idp}{, forwarded to \code{\link[gstat]{idw0}} -- see also there}
 }
 
 \value{

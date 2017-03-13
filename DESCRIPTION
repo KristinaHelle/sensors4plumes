@@ -7,8 +7,8 @@ Author: Kristina B. Helle
 Maintainer: Kristina B. Helle <kristina.helle@uni-muenster.de>
 Description: With this package you can load plume simulations (on lattice or points), even if it does not fit into memory. Then you can test your sampling designs by several, flexible cost functions -- that usually are based on the simulations. You may also optimise the sampling designs by different optimisation algorithms.
 License: GPL-3
-Depends: gstat, sp, raster
-Imports: lattice, emdist, rgdal, FNN, methods, graphics, conf.design, automap, genalg
+Imports: lattice, emdist, rgdal, FNN
+Depends: gstat, sp, raster, methods, graphics, conf.design, automap, genalg
 Suggests: testthat
 Collate: 
   s4p.R
