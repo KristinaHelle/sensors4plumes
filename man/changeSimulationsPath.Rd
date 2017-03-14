@@ -30,9 +30,9 @@ If \code{simulations} is in memory, it has no effect.
 \examples{
 data(radioactivePlumes_area)
 # data are taken from files, the paths need to be updated
-radioactivePlumes_area = changeSimulationsPath(radioactivePlumes_area,
-c(paste0(path.package("sensors4plumes"),"/extdata/radioactivePlumes_area_finaldose.grd"),
-  paste0(path.package("sensors4plumes"),"/extdata/radioactivePlumes_area_maxdose.grd"),
-  paste0(path.package("sensors4plumes"),"/extdata/radioactivePlumes_area_time.grd"))
-)
+#radioactivePlumes_area = changeSimulationsPath(radioactivePlumes_area,
+#c(paste0(path.package("sensors4plumes"),"/extdata/radioactivePlumes_area_finaldose.grd"),
+#  paste0(path.package("sensors4plumes"),"/extdata/radioactivePlumes_area_maxdose.grd"),
+#  paste0(path.package("sensors4plumes"),"/extdata/radioactivePlumes_area_time.grd"))
+#)
 }
