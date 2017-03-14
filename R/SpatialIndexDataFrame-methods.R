@@ -92,30 +92,30 @@ cbind.SpatialIndexDataFrame = function(...){
   return(newObj)
 }  
    
-rbindSpatialIndexDataFrame = function(...){ 
-  dots = list(...)
-  n = length(dots)
-  if (n >= 1){
-    newObj_data = dots[[1]]@data
-    newObj_index = dots[[1]]@index
-  }else{
-    stop("No object(s) given! Returns NULL.")
-    newObj = NULL
-  }
-  if (n >= 2){
-    for (l in 2:n){
-      n_data = nrow(newObj_data)
-      newObj_data = rbind(newObj_data, dots[[l]]@data)
-      newObj_index = c(newObj_index, dots[[l]]@index + n_data)
-    }
-  }  
-  newObj = new("SpatialIndexDataFrame",
-                     index = newObj_index,
-                     proj4string = dots[[1]]@proj4string,
-                     bbox = dots[[1]]@bbox,
-                     data = newObj_data)
-  return(newObj)
-}  
+# rbindSpatialIndexDataFrame = function(...){ 
+#   dots = list(...)
+#   n = length(dots)
+#   if (n >= 1){
+#     newObj_data = dots[[1]]@data
+#     newObj_index = dots[[1]]@index
+#   }else{
+#     stop("No object(s) given! Returns NULL.")
+#     newObj = NULL
+#   }
+#   if (n >= 2){
+#     for (l in 2:n){
+#       n_data = nrow(newObj_data)
+#       newObj_data = rbind(newObj_data, dots[[l]]@data)
+#       newObj_index = c(newObj_index, dots[[l]]@index + n_data)
+#     }
+#   }  
+#   newObj = new("SpatialIndexDataFrame",
+#                      index = newObj_index,
+#                      proj4string = dots[[1]]@proj4string,
+#                      bbox = dots[[1]]@bbox,
+#                      data = newObj_data)
+#   return(newObj)
+# }  
 
 
 
