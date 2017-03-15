@@ -81,40 +81,36 @@ earlyDetection(simulations, locations)
 
 \examples{
 # load data
-  data(radioactivePlumes_area)
+demo(radioactivePlumes_addProperties)
+
+# define 'min' function without warning for empty sets
+min_ = function(x, na.rm = TRUE){
+  if (length(x) == 0){ 
+    out = Inf
+  } else {
+    out = min(x, na.rm = na.rm)
+  } 
+  return(out)
+} 
 
 # preprocess data to provide required input  
-## layer: detection 
-threshold = 1e-7
-radioactivePlumes_area@values$detectable = calc(
-  radioactivePlumes_area@values$maxdose,
-  fun = function(x){x >= threshold})
-## plumes: 
-### total dose
-radioactivePlumes_area@plumes$totalDose = 
-  summaryPlumes(radioactivePlumes_area, fun = sum, values = "finaldose")[[2]]
-### number of locations where it can be detected
-radioactivePlumes_area@plumes$nDetectable = 
-  summaryPlumes(radioactivePlumes_area, fun = sum, values = "detectable")[[2]] 
 ### earliest possible detection of plume inside the area
-radioactivePlumes_area@plumes$earliestDetection = 
-  summaryPlumes(radioactivePlumes_area, fun = min, values = "time", na.rm = TRUE)[[2]]
+radioactivePlumes@plumes$earliestDetection = 
+  summaryPlumes(radioactivePlumes, fun = min_, kinds = "time", na.rm = TRUE)[[2]]
   
-
 # sample locations (sensors)
-sampleLocations1 = sample.int(nLocations(radioactivePlumes_area), 1000)
+sampleLocations1 = sample.int(nLocations(radioactivePlumes), 10)
 
 # compute cost
 singleDetection1 = singleDetection(
-  simulations = radioactivePlumes_area,
+  simulations = radioactivePlumes,
   locations = sampleLocations1)
   
 multipleDetection1 = multipleDetection(
-  simulations = radioactivePlumes_area,
+  simulations = radioactivePlumes,
   locations = sampleLocations1)
   
 earlyDetection1 = earlyDetection(
-  simulations = radioactivePlumes_area,
+  simulations = radioactivePlumes,
   locations = sampleLocations1)
 }
-%  nLocations(radioactivePlumes_area) - summaryPlumes(radioactivePlumes_area, fun = sum, values = "undetected")[[2]]

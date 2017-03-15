@@ -42,7 +42,7 @@
 interpolate = function(
   simulations,
   locations,
-  values = 1,
+  kinds = 1,
   fun_interpolation,
   tmpfile = "tmp_interpolate",
   overwrite = FALSE,
@@ -60,7 +60,7 @@ interpolate = function(
   names(newData)[1] = "z"
   # keep only first layer of simulations
   if (nlayers(simulations@values) > 1){
-    simulations@values = subset(simulations@values, values[1], drop = FALSE)
+    simulations@values = subset(simulations@values, kinds[1], drop = FALSE)
   }
   
   # check function

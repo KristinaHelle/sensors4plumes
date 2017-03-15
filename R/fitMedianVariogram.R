@@ -2,7 +2,7 @@
 # fitMedianVariogram                                     #
 ##########################################################
 # needs automap: autoFitVariogram
-fitMedianVariogram = function(simulations, plumes, locations, values = 1){
+fitMedianVariogram = function(simulations, plumes, locations, kinds = 1){
   if (!missing(locations)){
     # clean locations
     locationsP = locations
@@ -19,10 +19,10 @@ fitMedianVariogram = function(simulations, plumes, locations, values = 1){
 
   # subset data and turn into Spatial [sp] object
   if (!missing(locations)){
-    samplePlumesValues0 = subset(simulations, values = values[1], 
+    samplePlumesValues0 = subset(simulations, kinds = kinds[1], 
                                  locations = locations, plumes = plumes)    
   } else {
-    samplePlumesValues0 = subset(simulations, values = values[1], 
+    samplePlumesValues0 = subset(simulations, kinds = kinds[1], 
                                  plumes = plumes)
   }
 

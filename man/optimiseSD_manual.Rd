@@ -47,10 +47,8 @@ A list
 \author{ kristina.helle@uni-muenster.de  }
 
 \examples{
-# example 1: equal spread on "SpatialPolygrid"
 # prepare data and functions
-data(radioactivePlumes_local)
-radioactivePlumes_loc = subset(radioactivePlumes_local, locations = 1:2001)
+data(radioactivePlumes)
 
 meanFun = function(x){mean(x, na.rm = TRUE)}
 spatialSpreadMinDist = replaceDefault(
@@ -62,31 +60,16 @@ spatialSpreadMinDist = replaceDefault(
   type = "costFun.optimiseSD"
   )[[1]]
 
-radioactivePlumes_loc@locations@data$p1 = getValues(
-  subset.Simulations(radioactivePlumes_loc, plumes = 1, values = 1)@values)
+radioactivePlumes@locations@data$p1 = getValues(
+  subset(radioactivePlumes, plumes = 1, kinds = 1)@values)
 
 # interactive optimisation
-optSD_manual1 = optimiseSD_manual(simulations = radioactivePlumes_loc, 
+optSD_manual1 = optimiseSD_manual(simulations = radioactivePlumes, 
                                   costFun = spatialSpreadMinDist, 
                                   costMap = spatialSpreadMinDist,
-                                  locationsFix = seq(1, 2001, 100))
-
-
-# example 2: detection on SpatialPolygons (small artificial data)
-# prepare data (toy example) and functions
-data(SPolygonsDF)
-simulationsPolygons = subset(radioactivePlumes_local, 
-                           locations = c(200, 221, 242), plumes = 31:35)
-simulationsPolygons@locations = SPolygonsDF
-
-simulationsPolygons@values$detectable = calc(
-  simulationsPolygons@values$maxdose,
-  fun = function(x){x >= 1e-3}) 
-simulationsPolygons@plumes$totalDose = 
-  summaryPlumes(simulationsPolygons, fun = sum, values = "finaldose")[[2]]
-
-optSD_manual2 = optimiseSD_manual(simulations = simulationsPolygons, 
-                                  costFun = singleDetection, 
-                                  costMap = singleDetection,
-                                  col = heat.colors)
+                                  locationsFix = seq(1, 2001, 300),
+                                  locationsInitial = seq(1, 2001, 70),
+                                  locationsAll = setdiff(1:2001, seq(1,2001, 30)))
+## this result of such a manual optimisation is also in data(SDmanual)
+                                 
 }

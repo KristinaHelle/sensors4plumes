@@ -352,7 +352,7 @@ optimiseSD_ssa = function(
       warning(paste("Terminated after", k, "iterations because no improvement for ", maxStableIterations, " iterations.", sep = ""))
       break
     }
-  if (!is.null(nameSave)){
+  if (!is.null(nameSave) & verbatim){
 #    if(k > maxIterations * 0.9){
       save(SDs, report, file = filename)   
 #    }

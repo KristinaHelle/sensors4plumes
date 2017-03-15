@@ -46,14 +46,14 @@ A \code{list} of
 \author{ Kristina B. Helle, \email{kristina.helle@uni-muenster.de} }
 
 \examples{
-data(radioactivePlumes_area) # data that may be too big to keep in memory
+data(radioactivePlumes) 
 # sample of locations, e.g. proposed sensor set
-locSample = sample.int(nLocations(radioactivePlumes_area), 100) 
+locSample = sample.int(nLocations(radioactivePlumes), 10) 
 
 # plume detection 
 # (number of plumes not detected at any of locSample at a level of more than 1e-7)
 plumeMin_radioactivePlumes = 
-  summaryPlumes(radioactivePlumes_area, locations = locSample, kinds = 2, 
+  summaryPlumes(radioactivePlumes, locations = locSample, kinds = 2, 
   fun = "min",
   summaryFun = function(x, weight = 1, na.rm = TRUE){sum(x < 1e-7)})
 }

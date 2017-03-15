@@ -57,16 +57,16 @@ spplotLog = function(
     autoBase = TRUE
     rr = r[2]/r[1]
     if (rr < 100){
-      warning(paste0("The relation between maximum and minimum is ", round(rr), ":1. On a log scale there would be little difference between the values. Therefore it is plotted on normal scale."))
+      warning(paste0("The relation between maximum and minimum is ", signif(rr, 5), ":1. On a log scale there would be little difference between the values. Therefore it is plotted on normal scale."))
       base = 1
     }
     if (rr >= 100 & rr < 100000){
       base = 2
-      warning(paste0("The relation between maximum and minimum is ", round(rr), ":1. Data is transformed to logscale."))
+      warning(paste0("The relation between maximum and minimum is ", signif(rr,5), ":1. Data is transformed to logscale."))
     }
     if (rr >= 100000){
       base = 10
-      warning(paste0("The relation between maximum and minimum is ", round(rr), ":1. Data is transformed to logscale."))
+      warning(paste0("The relation between maximum and minimum is ", signif(rr,5), ":1. Data is transformed to logscale."))
     }
   } else {
     autoBase = FALSE

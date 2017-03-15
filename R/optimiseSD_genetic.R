@@ -39,8 +39,9 @@ numberPenalty = function(
   locationsAll,
   locationsFix,
   aimNumber,
-  penalty = 2,
-  plot = FALSE){
+  penalty = 2
+  #plot = FALSE
+  ){
   
   locations = c(locationsAll[chromosome == 1], locationsFix)
   

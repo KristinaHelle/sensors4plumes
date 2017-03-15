@@ -12,7 +12,7 @@ optimiseSD_greedy(simulations, costFun,
   locationsAll, locationsFix, locationsInitial, 
   aimCost, aimNumber,
   maxIterations = 100, swap = FALSE, 
-  nameSave)
+  nameSave, verbatim = FALSE)
 }
 
 \arguments{
@@ -26,6 +26,7 @@ optimiseSD_greedy(simulations, costFun,
   \item{maxIterations}{maximal number of iterations, then it stops}
   \item{swap}{\code{logical} if algorithm continues, when greedy optimum is found, by adding and deleting sensors in turns}
   \item{nameSave}{\code{character} path and name (without suffix!) where to save intermediate results (sampling design of each iteration)}
+  \item{verbatim}{\code{logical}, not implemented yet}
 }
 
 \details{
@@ -42,7 +43,7 @@ A list
 \author{ kristina.helle@uni-muenster.de  }
 
 \examples{
-# the function is to be used inside of optimiseSD
+# optimisation function: is to be used inside of optimiseSD
 # change parameters 'swap' and 'maxIterations'
 optGr_20_true = replaceDefault(
   optimiseSD_greedy,
@@ -50,13 +51,25 @@ optGr_20_true = replaceDefault(
     maxIterations = 20,
     swap = TRUE)
 )
+# cost function
+meanFun = function(x){mean(x, na.rm = TRUE)}
+minDist = replaceDefault(
+  spatialSpread, newDefaults = list(
+    fun = minimalDistance,
+    fun_R = meanFun
+  ), type = "costFun.optimiseSD"
+)[["fun"]] 
+
 # define possible, fix, and initial sensors
 data(SimulationsSmall)
-locInit1 = sample.int(nLocations(SimulationsSmall), 2)
-locKeep1 = sample(setdiff(1:nLocations(SimulationsSmall), locInit1), 2)
-locAll1 = c(sample(setdiff(1:nLocations(SimulationsSmall), c(locInit1, locKeep1)), 4), locInit1)
+I = nLocations(SimulationsSmall)
+set.seed(9345872)
+locInit1 = sample.int(I, 2)
+locKeep1 = sample(setdiff(1:I, locInit1), 2)
+locAll1 = c(sample(setdiff(1:I, c(locInit1, locKeep1)), 4), locInit1)
 
-# run optimisation
+# run optimisation (saves result to disk)
+\dontrun{
 optSD_greedy = optimiseSD(
   simulations = SimulationsSmall,
   costFun = minDist,    
@@ -66,4 +79,5 @@ optSD_greedy = optimiseSD(
   locationsInitial = locInit1,                
   aimNumber = 7                
 )
+}
 }

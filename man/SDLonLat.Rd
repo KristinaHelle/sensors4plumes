@@ -18,10 +18,9 @@ SDLonLat(simulations, SD)
 \author{ Kristina B. Helle, \email{kristina.helle@uni-muenster.de} }
 
 \examples{
-data(radioactivePlumes_area)
-SDs1 = matrix(sample.int(2500, 40), nrow = 8)
-
-LL1 = SDLonLat(simulations = radioactivePlumes_area, 
-                   SD = SDs1)
+data(radioactivePlumes)
+data(SDgenetic)
+LL1 = SDLonLat(simulations = radioactivePlumes, SD = SDgenetic[["SD"]])
+plot(LL1[[1]])
 }
 

@@ -29,7 +29,7 @@ If \code{values} (of one layer) fit into memory, they are plotted by \code{\link
 \author{ kristina.helle@uni-muenster.de  }
 
 \examples{
-data(radioactivePlumes_area)
-plot(radioactivePlumes_area, zcol = 3, main = "radioactive \n plumes \n area", col = bpy.colors())
+data(radioactivePlumes)
+plot(radioactivePlumes, zcol = 3, main = "radioactive \n plumes \n area", col = bpy.colors())
 }
 

@@ -8,9 +8,9 @@ importFrom("utils", "read.table")
 import(sp)
 import(raster)
 import(gstat)
-import(lattice)
+#import(lattice)
 #importFrom("latticeExtra", trellis.par.set, draw.colorkey, simpleKey, trellis.focus, panel.identify)
-#importFrom("lattice", trellis.par.set, draw.colorkey, simpleKey, trellis.focus, panel.identify)
+importFrom("lattice", trellis.par.set, draw.colorkey, simpleKey, trellis.focus, panel.identify)
 importFrom("conf.design", factorize)
 importFrom("FNN", get.knnx)
 importFrom("rgdal", writeGDAL)
@@ -20,6 +20,7 @@ importFrom("graphics", axis)#  image,
 importFrom("genalg", rbga.bin)
 importFrom("methods", setClass, setValidity, setAs, setMethod, setClassUnion)
 importFrom("emdist", emd2d) # earth mover distance
+importFrom("utils", demo)
 
 exportClasses(SpatialPolygridDataFrame,
               SpatialIndexDataFrame,
@@ -62,6 +63,7 @@ export(nLocations,
        singleDetection,
        multipleDetection,
        earlyDetection,
+       numberPenalty,
        optimiseSD_greedy,
        optimiseSD_ssa,
        optimiseSD_genetic,
@@ -72,8 +74,7 @@ export(nLocations,
        optimisationCurve,
        SDLonLat,
        similaritySD,
-       spplotLog,
-       interpol0reg
+       spplotLog
        )
 exportMethods(spplot,
               coordinates,

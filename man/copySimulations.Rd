@@ -33,16 +33,8 @@ The \code{simulations} with paths in the \code{values} updated to the new \code{
 \dontrun{
 library(sensors4plumesData)
 data(radioactivePlumes_area)
-<<<<<<< HEAD
 radioactivePlumes_area2 = 
   copySimulations(radioactivePlumes_area, 
   newPath = "/test", newFile = "radioactivePlumes_area2")
 }
 }
-=======
-## not run
-#radioactivePlumes_area2 = 
-#  copySimulations(radioactivePlumes_area, 
-#  newPath = "/test", newFile = "radioactivePlumes_area2")
-}
->>>>>>> 81e78f3b07d125830a0e6c8420978bb7b6539de4

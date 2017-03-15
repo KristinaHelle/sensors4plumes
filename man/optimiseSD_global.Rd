@@ -59,6 +59,7 @@ detectionMatrix = matrix(c(0,1,0,0,0,1,
                           1,1,0,0,0,0,
                           0,0,1,0,0,1), 
                         nrow = 7, ncol = 6, byrow = TRUE)
+data(SimulationsSmall)                        
 completeExample = Simulations( 
   locations = SimulationsSmall@locations[1:7,],
   plumes = SimulationsSmall@plumes[1:6,],
@@ -85,6 +86,7 @@ optSD_global = optimiseSD(
   optimisationFun = optSDglobal[[1]],
   nameSave = NA
 )
+## this result is also in data(SDglobal)
   
 # visualise result
 ## which plumes are detected?
@@ -106,6 +108,5 @@ SDopt = as(subsetSDF(completeExample@locations,
 spplot(completeExample@locations, zcol = "detectable",
        sp.layout = list(list("sp.points", 
                         SpatialPoints(coords = coordinates(SDopt), proj4string = CRS(proj4string(SDopt))),
-                        col = 3, cex = 2, lwd = 1.5))
-)
+                        col = 3, cex = 2, lwd = 1.5)))
 }

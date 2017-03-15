@@ -34,24 +34,43 @@ Generates a plot or a file with it, no value returned.
 \author{ Kristina B. Helle, \email{kristina.helle@uni-muenster.de} }
 
 \examples{
-# use results of example optimisations
-load()
-
+data(SDgreedy)
 curve_greedy1 = optimisationCurve(
-  report = optGreedy5,
+  report = SDgreedy,
   type = "greedy")
 
-curve_ssa1 = optimisationCurve(
-  report = optSSA1$report,
-  type = "ssa")
-
+data(SDgenetic)
 curve_genetic1 = optimisationCurve(
-  report = optSD_gen1$report,
+  report = SDgenetic$report,
   type = "genetic")
 
+data(SDglobal)
 curve_global1 = optimisationCurve(
-  report = optSD_global2,
+  report = SDglobal,
+  type = "global")
+  
+data(SDmanual)  
+curve_manual1 = optimisationCurve(
+  report = SDmanual,
+  type = "manual")
+
+\dontshow{
+\dontrun{
+# error
+data(SDssa)
+curve_ssa1 = optimisationCurve(
+  report = SDssa$report,
+  type = "ssa")
+}
+}
+  
+\dontrun{
+# generate a file
+curve_global1 = optimisationCurve(
+  report = SDglobal,
   type = "global",
   nameSave = "optSD_global",
   width = 600, height = 300)
+}  
+
 }

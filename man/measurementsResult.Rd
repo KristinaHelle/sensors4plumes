@@ -33,29 +33,16 @@ It is a general cost function, after specifying some parameters via \code{\link{
 \author{ kristina.helle@uni-muenster.de  }
 
 \examples{
-# get data
-data(radioactivePlumes_area)
+demo(radioactivePlumes_addProperties)
   
-# sample locations (potential sensor locations)
-sampleLocations1 = sample.int(nLocations(radioactivePlumes_area), 1000)
-
-# compute input data
-## extra values: detection (a plume is detected at a location if exceeds the threshold)
-threshold = 1e-7
-radioactivePlumes_area@values$undetected = calc(
-  radioactivePlumes_area@values$maxdose,
-  fun = function(x){x < threshold})
-## extra plumes's values (needed to callibrate cost functions): 
-### total dose
-radioactivePlumes_area@plumes$totalDose = 
-  summaryPlumes(radioactivePlumes_area, fun = sum, kinds = "finaldose")[[2]]
-  
+# sensor locations
+sampleLocations1 = sample.int(nLocations(radioactivePlumes), 10)
 
 # modify 'measurementResult' to cost function 'singleDetection' 
 singleDetection = replaceDefault(measurementsResult, newDefaults = list(
-  kinds = "undetected",
+  kinds = "detectable",
   fun_p = function(x, nout = 1){
-    y = min(x)
+    y = 1 - max(x)
     if (length(x) == 0){
       y = 1
     }
@@ -64,11 +51,14 @@ singleDetection = replaceDefault(measurementsResult, newDefaults = list(
   fun_Rp = function(x, weight = 1, nout = 1){
     mean(x * weight$totalDose)/mean(weight$totalDose)
   }),
-  type = "costFun")[[1]]  
+  type = "costFun.optimiseSD")[[1]]  
 
 # compute cost for sensors at 'sampleLocations1'
   singleDetection1 = singleDetection(
-    simulations = radioactivePlumes_area,
+    simulations = radioactivePlumes,
     locations = sampleLocations1) 
-
+    
+# results
+singleDetection1[["cost"]] # global cost: fraction of nondetected plumes, weighted by their total dose
+singleDetection1[["costPlumes"]] # for each plume if it is detected (0) or not (1)
 }

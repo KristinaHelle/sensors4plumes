@@ -25,10 +25,10 @@ summaryLocations = function(
   }
   
   # select values of interest
-  #if (!missing(values)){
-  data = subset(data, values[1])
-  if (length(values) > 1){
-    warning("Only the first of the 'values'(", names(data)[values[1]], ") was used.", sep = "")
+  #if (!missing(kinds)){
+  data = subset(data, kinds[1])
+  if (length(kinds) > 1){
+    warning("Only the first of the 'kinds'(", names(data)[kinds[1]], ") was used.", sep = "")
   }
   #} 
   #! below not necessary, just uses default

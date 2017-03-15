@@ -40,20 +40,20 @@ A \code{list} of
 \author{ Kristina B. Helle, \email{kristina.helle@uni-muenster.de} }
 
 \examples{
-data(radioactivePlumes_area) # data that may be too big to keep in memory
-plumeSample = sample.int(nPlumes(radioactivePlumes_area), 100) # sample of plumes
+data(radioactivePlumes) 
+plumeSample =  c(1:5, 16:20, 30:34, 45:49)# sample of plumes: jan, apr, jul, oct
 
 # plume detection 
 # (number of plumes in plumeSample that can be detected at a level of more than 1e-7)
 detection1em7 = function(x, ...){
-    xExceed = x > 1e-7
-    out = sum(xExceed)
-    return(out)
-  }
-plumeNr_radioactivePlumes = summaryLocations(radioactivePlumes_area, 
-  plumes = plumeSample, fun = detection1em7, kinds = 2)
+  xExceed = x > 1e-7
+  out = sum(xExceed)
+  return(out)
+}
+plumeNr_radioactivePlumes = summaryLocations(radioactivePlumes, 
+                                             plumes = plumeSample, fun = detection1em7, kinds = 2)
 ## plot map
-plumeNrMap = radioactivePlumes_area@locations
-plumeNrMap@data$plumeNr = plumeNr_radioactivePlumes
-# spplot(plumeNrMap, zcol = 2) # not working (as error in polygrid2grid?)
+plumeNrMap = radioactivePlumes@locations
+plumeNrMap@data$plumeNr = plumeNr_radioactivePlumes[["summaryLocations"]]
+spplot(plumeNrMap, zcol = "plumeNr")
 }

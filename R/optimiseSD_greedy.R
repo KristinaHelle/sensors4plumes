@@ -148,8 +148,9 @@ optimiseSD_greedy = function(
   #  keepInitial = FALSE,                     # if initial sensors may be replaced
   maxIterations = 100,             # after this number of iterations search is stopped 
   swap = FALSE,                      # if optimisation is to be continued by adding and deleting in turns after greedy optimum is reached
-  nameSave# = NULL                        # without suffix .Rdata
+  nameSave,# = NULL                        # without suffix .Rdata
 #  plot = FALSE, 
+  verbatim = FALSE
 ){
   costFun = replaceDefault(costFun, newDefaults = list(simulations = simulations))[[1]]
   # ------------------- aim --------------------------------
@@ -172,6 +173,11 @@ optimiseSD_greedy = function(
     warning("No aim for the optimisation indicated; for the given number of 'locationsInitial' cost is minimised.")
     kindAim = "number"
     aim = length(locationsInitial)
+  }
+  
+  if (!missing(nameSave)){
+    filename = paste0(nameSave, ".Rdata")
+    message(paste0("Sampling designs saved at ", filename, "."))
   }
   
   ############ main algorithm ###################################
@@ -236,8 +242,6 @@ optimiseSD_greedy = function(
         SDs[[l]] = locationsCurrent
         #if (!is.null(nameSave)){
         if (!missing(nameSave)){
-          filename = paste0(nameSave, ".Rdata")
-          message(paste0("Sampling designs saved at ", filename, "."))
           save(SDs, file = filename)  
         }
         
@@ -437,7 +441,8 @@ optimiseSD_greedy = function(
     save(SDs, file = filename)  
   }
   out = list()
-  out[["SDs"]] = SDs
+  out[["SD"]] = SDs[[finalSDwhich]]
+  out[["SDs"]] =  SDs
   out[["finalSDwhich"]] = finalSDwhich
   out[["evalSDs"]] = data.frame(cost = costSDs, number = lengthSDs) 
   return(out)

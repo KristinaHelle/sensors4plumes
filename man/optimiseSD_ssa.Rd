@@ -41,7 +41,7 @@ optimiseSD_ssa(simulations, costFun,
   \item{end_acc_vG}{acceptance of worse results in maxIterations-th iteration (for \code{acceptanceMethod = "vanGroenigen"})}
   \item{cooling_vG}{cooling parameter (for \code{acceptanceMethod = "vanGroenigen"}), see details}
   \item{startAcceptance_vG}{second cooling parameter (for \code{acceptanceMethod = "vanGroenigen"}), see details}
-  \item{start_acc_iI}{calibration factor of acceptance for \code{acceptanceMethod = "intamapInteractive"} (equals \code{start_p} in \code{\link[intamapInteractive]{ssaOptim}}), see details}
+  \item{start_acc_iI}{calibration factor of acceptance for \code{acceptanceMethod = "intamapInteractive"} (equals \code{start_p} in \code{ssaOptim} in package \code{intamapInteractive}), see details}
   \item{plot}{if iteration is plotted (currently disabled)}
   \item{nameSave}{\code{character} path and name (without suffix!) where to save intermediate results (sampling design of each iteration)}
   \item{verbatim}{print intermediate results and keep sampling desings and cost of all iterations}
@@ -91,48 +91,46 @@ optimSD_ssa1 = replaceDefault(
   ),
   type = "optimisationFun.optimiseSD")[[1]] 
 
+# load data
+demo(radioactivePlumes_addProperties)
 # define possible, fix, and initial sensors
-data(radioactivePlumes_area)
-locDel3 = sample.int(nLocations(radioactivePlumes_area), 5)
-locKeep3 = sample(setdiff(1:nLocations(radioactivePlumes_area), locDel3), 100)
-locAll3 = c(sample(setdiff(1:nLocations(radioactivePlumes_area), 
+I = nLocations(radioactivePlumes)
+set.seed(22347287)
+locDel3 = sample.int(I, 5)
+locKeep3 = sample(setdiff(1:I, locDel3), 10)
+locAll3 = c(sample(setdiff(1:I, 
   c(locDel3, locKeep3)), 10), locDel3)
 
-# prepare data
-threshold = 1e-7
-radioactivePlumes_area@values$detectable = calc(
-  radioactivePlumes_area@values$maxdose,
-  fun = function(x){x >= threshold})
-radioactivePlumes_area@plumes$nDetectable = 
-  summaryPlumes(radioactivePlumes_area, fun = sum, values = "detectable")[[2]]  
-costInitial1 = multipleDetection(simulations = radioactivePlumes_area, 
+ 
+costInitial1 = multipleDetection(simulations = radioactivePlumes, 
   locations = c(locKeep3, locDel3))
 
-# run optimisation
+# run optimisation (result is saved to disk)
+\dontrun{
 optSSA1 = optimiseSD(
-  simulations = radioactivePlumes_area,
+  simulations = radioactivePlumes,
   costFun = multipleDetection,
-  locationsAll = setdiff(1:nLocations(radioactivePlumes_area), c(locKeep3, locAll3)),                       
+  locationsAll = setdiff(1:nLocations(radioactivePlumes), c(locKeep3, locAll3)),                       
   locationsFix = locKeep3,
   locationsInitial = locDel3,
   aimCost = 0.05 * costInitial1[[1]], 
   aimNumber = length(locDel3),
   optimisationFun = optimSD_ssa1
 )  
+}
+## this result is also in data(SDssa)
 
 # visualise 
+optSSA1$report = optSSA1$report[-nrow(optSSA1$report),]
 ## cost curve
-plot(optSSA1$report$costTest, pch = ".")
-lines(optSSA1$report$costBest, col = 4)
-lines(optSSA1$report$cost, col = 3)
-points(optSSA1$report$costTest, pch = ".", col = optSSA1$report$accepted + 2)
+plot(optSSA1$report$cost, pch = ".", col = optSSA1$report$accepted + 2)
 ## designs
-allSDs = subsetSDF(radioactivePlumes_area@locations,
+allSDs = subsetSDF(radioactivePlumes@locations,
   locations = c(locKeep3, locDel3, optSSA1$SD[1:5], unique(as.integer(optSSA1$SDs_test))))
 AllSDs = as(allSDs, "SpatialPointsDataFrame")  
-radioactivePlumes_area@locations@data$nDetectable = 
-  summaryLocations(radioactivePlumes_area, fun = sum, kinds = "detectable")[[2]] 
-spplot(radioactivePlumes_area@locations, zcol = "nDetectable",
+radioactivePlumes@locations@data$nDetectable = 
+  summaryLocations(radioactivePlumes, fun = sum_, kinds = "detectable")[[2]] 
+spplot(radioactivePlumes@locations, zcol = "nDetectable",
   sp.layout = list("sp.points", AllSDs, 
   pch = c(rep(4, length(locKeep3)), 
           rep(1, length(locDel3)), 

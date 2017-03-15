@@ -12,19 +12,20 @@ Interpolate many maps at once -- even if they do not fit into memory
 \code{fitMedianVariogram} is a wrapper of \code{\link[automap]{autofitVariogram}}: fits variograms to a sample of plumes of a \code{simulations} object and generates a variogram with the median parameters.
 }
 \usage{
-interpolate(simulations, locations, values = 1, fun_interpolation, 
+interpolate(simulations, locations, kinds = 1, fun_interpolation, 
   tmpfile = "tmp_interpolate", overwrite = FALSE, chunksize = 1e+7)
-fitMedianVariogram(simulations, plumes, locations, values = 1)
+fitMedianVariogram(simulations, plumes, locations, kinds = 1)
 idw0z(formula = z ~ 1, data, newdata, y, idp = 2)
 }
 \arguments{
   \item{simulations}{\code{Simulations}}
   \item{locations}{indices of \code{locations} to be used as input; multiple and invalid values are ignored}
   \item{plumes}{indices of \code{plumes} to fit variograms to}
-  \item{values}{ layer of the \code{values} of \code{simulations} to be used; interpolation can only be applied to one layer: if \code{values} is a vector, only the first entry is used in both functions. }
+  \item{kinds}{ layer of the \code{values} of \code{simulations} to be used; interpolation can only be applied to one layer: if \code{values} is a vector, only the first entry is used in both functions. }
   \item{fun_interpolation}{ interpolation \code{function}, must have the parameters \code{y}, \code{data}, \code{newdata} (form as for \code{\link[gstat]{krige0}}). All other parameters need default values, e.g. the \code{model} of \code{krige0} that can be set by \code{replaceDefault} with \code{type = "interpolation_fun.interpolate"}. 
   
-  It may also have the two additional parameters \code{dataLoc} and \code{newdataLoc} (like \code{\link{interpol0reg}}) which can by modified in \code{\link{replaceDefault}} with \code{type = "fun_interpolationSplit.interpolate"}.}
+  %It may also have the two additional parameters \code{dataLoc} and \code{newdataLoc} (like \code{\link{interpol0reg}}) which can by modified in \code{\link{replaceDefault}} with \code{type = "fun_interpolationSplit.interpolate"}.
+  }
   \item{tmpfile}{ filename for the raster file in case the result does not fit into memory; if \code{FALSE} the function stops with a warning and does not create a file }
 \item{overwrite}{ boolean, if the file at \code{tmpfile} may be overwritten } 
 \item{chunksize}{ maximal number of cells to be processed at once -- forwarded to \code{\link[raster]{blockSize}} inside }
@@ -50,30 +51,29 @@ The function may produce intermediate files at \code{tmpfile} (with name extensi
 
 \examples{
 # get data
-data(radioactivePlumes_area)
+data(radioactivePlumes)
 
-# generate median variogram from a sample of plumes
-samplePlumes = sort(sample.int(nPlumes(radioactivePlumes_area), 100))
-medianVariogram = fitMedianVariogram(simulations = radioactivePlumes_area, 
-                              plumes = samplePlumes, 
-                              values = 1)
+# generate median variogram from plumes
+medianVariogram = fitMedianVariogram(simulations = radioactivePlumes, 
+                              plumes = 1:nPlumes(radioactivePlumes),
+                              kinds = 1)
 # prepare interpolation function 
 krige0var = replaceDefault(krige0, newDefaults = list(
   formula = z ~ 1, model = medianVariogram, beta = NA, ... = NA),
   type = "fun_interpolation.interpolate")[[1]]
 
 # sample locations: proposed sensors
-sampleLocations = sample.int(nLocations(radioactivePlumes_area), 100)
+sampleLocations = sample.int(nLocations(radioactivePlumes), 50)
 
 # interpolate
 interpolated = interpolate(
-  simulations = radioactivePlumes_area,
-  values = 1,
+  simulations = radioactivePlumes,
+  kinds = 1,
   locations = sampleLocations,
   fun_interpolation = krige0var)
   
 # combine plot original and interpolated
-originalAndInterpolated = radioactivePlumes_area
+originalAndInterpolated = radioactivePlumes
 originalAndInterpolated@values = stack(
   originalAndInterpolated@values[[1]], interpolated)
 
@@ -81,6 +81,9 @@ OriginalAndInterpolated = extractSpatialDataFrame(
   originalAndInterpolated, plumes = 1:4)
 
 samplePoints = as(OriginalAndInterpolated, "SpatialPointsDataFrame")[sampleLocations,]
+spplotLog(OriginalAndInterpolated,
+  sp.layout = list("sp.points", 
+    samplePoints, col = 3))
 spplot(OriginalAndInterpolated,
   sp.layout = list("sp.points", 
     samplePoints, col = 3))

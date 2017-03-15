@@ -70,13 +70,10 @@ The subset of values (defined by \code{plumes} and \code{locations}) is only kep
 \author{ kristina.helle@uni-muenster.de  }
 
 \examples{
-data(radioactivePlumes_local)
+data(radioactivePlumes)
 
 # number of not detected plumes for given set of 10 sensors, weighted by total dose of plumes
-sensors = sample.int(nLocations(radioactivePlumes_local), 10)
-radioactivePlumes_local@plumes$totalDose = 
-  summaryPlumes(radioactivePlumes_local, 
-  fun = sum, kinds = 1)[[2]]
+sensors = sample.int(nLocations(radioactivePlumes), 10)
   
 nondetection = function(x, threshold = 1e-7, nout = 1){ 
   all(x[,2] < threshold)
@@ -87,7 +84,7 @@ sumWeighted = function(x, weight, nout = 1){
 }
 
 weightedSumUndetectedAtSensors = simulationsApply(
-  simulations = radioactivePlumes_local,
+  simulations = radioactivePlumes,
   locations = sensors,
   fun_p = nondetection,
   fun_Rp = sumWeighted
@@ -102,13 +99,13 @@ meanDetectionTime = function(x, nout = 1){
 }
 
 mapMeanDetectionTime = simulationsApply(
-  simulations = radioactivePlumes_local,
+  simulations = radioactivePlumes,
   kinds = 3,
   fun_l = meanDetectionTime
 )
-radioactivePlumes_local@locations@data$meanDetectionTime = 
+radioactivePlumes@locations@data$meanDetectionTime = 
   mapMeanDetectionTime[["result_locations"]]
-spplot(radioactivePlumes_local@locations, zcol = "meanDetectionTime")
+spplot(radioactivePlumes@locations, zcol = "meanDetectionTime")
 
 # general ratio and difference of 'maxdose' and 'finaldose'
 ratioMaxFinal =  function(x, nout = 2){
@@ -118,7 +115,7 @@ ratioMaxFinal =  function(x, nout = 2){
   out = c(ratio, diff)
 }
 valuesRatio = simulationsApply(
-  simulations = radioactivePlumes_local,
+  simulations = radioactivePlumes,
   fun_pl = ratioMaxFinal,
   fun_Rpl_cellStats = "mean",
   nameSave = "ratio"

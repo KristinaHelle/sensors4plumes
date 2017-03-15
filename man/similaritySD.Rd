@@ -30,26 +30,26 @@ A vector of length refering to the number of sampling designs in \code{SD} with 
 \examples{
 ## ---------------- prepare data --------------------------
 # simulations with SpatialPolygridDataFrame
-data(radioactivePlumes_local)
+data(radioactivePlumes)
 
 # simulations with SpatialPixelsDataFrame
 data(meuse.grid)
 coordinates(meuse.grid) = ~ x + y
 gridded(meuse.grid) = TRUE
-meuseGSim = subset(radioactivePlumes_local, 
-                  locations = length(meuse.grid), plumes = 1:10)
+meuseGSim = subset(radioactivePlumes, 
+                  locations = 1:length(meuse.grid), plumes = 1:10)
 meuseGSim@locations = meuse.grid
 
 # simulations with rectangular SpatialPixelsDataFrame
 data(SPixelsDF)
-rectSim = subset(radioactivePlumes_local, 
+rectSim = subset(radioactivePlumes, 
                  locations = 1:length(SPixelsDF), plumes = 1:10)
 rectSim@locations = SPixelsDF # not nice, no checking if sizes fit
 
 # simulations with SpatialPointsDataFrame 
 data(meuse)
 coordinates(meuse) = ~ x + y
-meuseSim = subset(radioactivePlumes_local, 
+meuseSim = subset(radioactivePlumes, 
                   locations = length(meuse), plumes = 1:10)
 meuseSim@locations = meuse # not nice, no checking if sizes fit
 
@@ -104,7 +104,7 @@ plot(coordinates(meuseSim@locations), pch = ".")
                                 type = "EarthMoversDistance", dist = "manhattan")  
 
   ## SpatialPolygridDataFrame
-  sim_3_1_5 = similaritySD(simulations = radioactivePlumes_local,
+  sim_3_1_5 = similaritySD(simulations = radioactivePlumes,
                                 SD = c(220, 503), referenceSD = c(224, 544), 
                                 type = "EarthMoversDistance")  
 

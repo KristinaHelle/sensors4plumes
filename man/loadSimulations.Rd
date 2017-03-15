@@ -74,18 +74,19 @@ The function may generate (and overwrite or delete) files in \code{savePath}.
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 %}
 \examples{
-# examples for possible input is given in the subfolders of data/fileFormats
+\dontrun{
+# examples for possible input is given in package sensors4plumesData in the subfolders of inst/extdata/fileFormats
 
 # from raster files
 Simulations1 = loadSimulations(
-  basicPath = "data/fileFormats/raster",
+  basicPath = paste0(path.package("sensors4plumesData"),"/extdata/fileFormats/raster"),
   savePath = "t1_",
   overwrite = TRUE
 )
 
 # from text files
 Simulations2 = loadSimulations(
-  basicPath = "data/fileFormats/text_multicolumn",
+  basicPath = paste0(path.package("sensors4plumesData"),"/extdata/fileFormats/text_multicolumn"),
   readBy = "scan",  
   savePath = "t2_",
   overwrite = TRUE,
@@ -97,12 +98,13 @@ region = as.logical(replicate(20, sample.int(2,1)) - 1)
 bBox = c(0.2, 0.7, 0.4, 0.8)
 
 Simulations3 = loadSimulations(
-  basicPath = "data/fileFormats/raster_multilayer",
+  basicPath = paste0(path.package("sensors4plumesData"),"/extdata/fileFormats/raster_multilayer"),
   savePath = "t3_",
   region = region,
   bBox = bBox,
   overwrite = TRUE
 )
+}
 }
 
 %\keyword{ ~kwd1 }

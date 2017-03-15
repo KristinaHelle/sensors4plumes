@@ -45,31 +45,19 @@ The function generates plots (main and point key missing) and returns a list of 
 
 
 \examples{
-data(radioactivePlumes_area)
-# random SDs
-SDs = list(
-  sample.int(2500, 5),
-  sample.int(2500, 10),
-  sample.int(2500, 15),
-  sample.int(2500, 20))
-
-# prepare data
-radioactivePlumes_area@values$detectable = calc(
-  radioactivePlumes_area@values$maxdose,
-  fun = function(x){x >= 1e-7})
-radioactivePlumes_area@plumes$totalDose = 
-  summaryPlumes(radioactivePlumes_area, fun = sum, values = "finaldose")[[2]]
+demo(radioactivePlumes_addProperties) 
+data(SDssa)
+SDs = list(SDssa[["SD_best"]], SDssa[["SD"]])
 
 # separate maps
 plotSD1 = plotSD(
-  simulations = radioactivePlumes_area,
+  simulations = radioactivePlumes,
   SD = SDs,
   costMap = singleDetection,
-  mainCost = FALSE) # would not work, if all plots on one display 
-c(plotSD1[[1]], plotSD1[[2]], plotSD1[[3]], plotSD1[[4]], layout = c(2,2))  # plot together
+  mainCost = FALSE)
 
 plotSD1a = plotSD(
-  simulations = radioactivePlumes_area,
+  simulations = radioactivePlumes,
   SD = SDs,
   costMap = singleDetection)
 for (i in seq(along = SDs)){
@@ -77,27 +65,34 @@ for (i in seq(along = SDs)){
 }
   
 # combined map (with customised parameters for fix and initial sensors)
+I = nLocations(radioactivePlumes)
+set.seed(22347287) # reconstruct initial and fix sensors of SDssa
+locDel3 = sample.int(I, 5)
+locKeep3 = sample(setdiff(1:I, locDel3), 10)
+locAll3 = c(sample(setdiff(1:I, 
+  c(locDel3, locKeep3)), 10), locDel3)
+
 plotSD2 = plotSD(
-  simulations = radioactivePlumes_area,
+  simulations = radioactivePlumes,
   SD = SDs,
-  locationsFix = sample.int(2500, 30),
-  locationsInitial = sample.int(2500, 40),
-  locationsAll = sample.int(2500, 1000),
+  locationsAll = setdiff(1:nLocations(radioactivePlumes), c(locKeep3, locAll3)),                       
+  locationsFix = locKeep3,
+  locationsInitial = locDel3,
   costMap = singleDetection,
-  allIn1Plot = 4,
+  allIn1Plot = 2,
   col = c("green", "blue", "red", "white"),
   pch = c(1,2,4),
   col.regions = grey.colors,
   colorkey = FALSE)  
-plotSD2
+
 
 # combined map (with customised parameters for different SDs)   
 plotSD3 = plotSD(
-  simulations = radioactivePlumes_area,
+  simulations = radioactivePlumes,
   SD = SDs,
-  locationsFix = sample.int(2500, 30),
-  locationsAll = sample.int(2500, 1000),,
-  allIn1Plot = 4,
+  locationsFix = locKeep3,
+  locationsAll = setdiff(1:nLocations(radioactivePlumes), c(locKeep3, locAll3)),  
+  allIn1Plot = 2,
   col = c(1, "white", "white", "white"),
   pch = c(1,20,0),
   col.regions = grey.colors,
@@ -106,7 +101,4 @@ plotSD3 = plotSD(
   cex.SDs = c(3.5,3,2.5,2),
   col.SDs = 4:8
   )  
-
-
-
 }

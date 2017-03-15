@@ -1,10 +1,13 @@
 \name{optimiseSD_genetic}
 \alias{optimiseSD_genetic}
+\alias{numberPenalty}
+
 \title{
 Optimisation of sensor locations by a binary genetic algorithm 
 }
 \description{
-Optimises sensors for a given \code{Simulations} object and \code{costFunction}. It starts from a population of sensor sets that can be provided and else are random. By testing them and recombining good locations, a new improved population is generated. This process continues until the aim or a stopping criterion is reached. It applies the binary genetic algorithm \code{\link[genalg]{rbga.bin}}.   
+\code{optimiseSD_genetic} optimises sensors for a given \code{Simulations} object and \code{costFunction}. It starts from a population of sensor sets that can be provided and else are random. By testing them and recombining good locations, a new improved population is generated. This process continues until the aim or a stopping criterion is reached. It applies the binary genetic algorithm \code{\link[genalg]{rbga.bin}}.\cr
+\code{numberPenalty} is the default evaluation function, it returns the penalty if \code{aimNumber} is exceeded, else the cost computed by \code{costFun}.
 }
 \usage{
 optimiseSD_genetic(simulations, costFun, 
@@ -15,6 +18,7 @@ optimiseSD_genetic(simulations, costFun,
   popSize = 200, iters = 100, 
   mutationChance = NA, elitism = NA
 )
+numberPenalty(chromosome, simulations, costFun, locationsAll, locationsFix, aimNumber, penalty = 2)
 }
 
 \arguments{
@@ -25,7 +29,7 @@ Some arguments are the same for all optimisation algorithms, they are marked by 
   \item{locationsFix}{\code{*}}
   \item{locationsInitial}{\code{*}; here it may also be a matrix, each row indicates a set of sensors}
   \item{aimCost}{\code{*}}
-  \item{aimNumber}{\code{*}; is ignored if \code{locationsInitial} given, else it defines the number of sensors in the sets of the initial population}
+  \item{aimNumber}{\code{*}; if \code{locationsInitial} given it must be \code{NULL} and is ignored, else it defines the number of sensors in the sets of the initial population}
   \item{nameSave}{\code{*}}
   \item{verbatim}{if more output is to be written to the console}
   \item{evalFunc}{\code{**}; this function has to take a chromosome and return its cost (including fix sensors); it can be modified by \code{\link{replaceDefault}} with \code{type = "evalFunc.rbga.bin"}}
@@ -33,6 +37,8 @@ Some arguments are the same for all optimisation algorithms, they are marked by 
   \item{iters}{\code{**}} 
   \item{mutationChance}{\code{**}}
   \item{elitism}{\code{**}}
+  \item{chromosome}{a vector of 0 and 1 of the same length as \code{locationsAll} indicating sensors at the positions of 1.}
+  \item{penalty}{\code{numeric} to be returned if number of 1s in \code{chromosome} exceeds \code{aimNumber}.}
 }
 
 \details{
@@ -49,6 +55,17 @@ A list
 \author{ kristina.helle@uni-muenster.de  }
 
 \examples{
+# load data and compute required properties
+demo(radioactivePlumes_addProperties) 
+
+# initial, fix, possible sensor locations
+I = nLocations(radioactivePlumes)
+set.seed(1000)
+locInit_l = t(replicate(10, sample.int(I, 5))) # samples in rows (replicate: samples in columns)
+locKeep_l = sample(setdiff(1:I, locInit_l), 2)
+locAll_l = c(sample(setdiff(1:I, c(locInit_l, locKeep_l)), 
+                          round(I - (5 + 2)) * 0.5), locInit_l)
+
 # the function is to be used inside of optimiseSD
 # change algorithm specific parameters 'evalFunc', 'popSize', 'iters'
 optimiseSD_genetic_1 = replaceDefault(
@@ -61,19 +78,24 @@ optimiseSD_genetic_1 = replaceDefault(
 
 # run optimisation
 OptSD_gen1 = optimiseSD(
-  simulations = radioactivePlumes_local, 
+  simulations = radioactivePlumes, 
   costFun = singleDetection,
   optimisationFun = optimiseSD_genetic_1,
   locationsAll = locAll_l, 
   locationsFix = locKeep_l, 
   locationsInitial = locInit_l[1,],
   nameSave = NA, # needed, as else NULL is forwarded and parameter destroyed 
-  aimCost = NA # needed, as else NULL is forwarded and parameter destroyed 
+  aimCost = NA, # needed, as else NULL is forwarded and parameter destroyed 
+  aimNumber = NULL # needed to be forwarded and then be correctly interpreted as missing
 )
+## this result is also in data(SDgenetic)
 
+\dontrun{
+# result is not returned but saved to file
 ## case with 'aimCost'
 optimiseSD_genetic_2 = replaceDefault(
     optimiseSD_genetic, newDefaults = list(
+      evalFunc = numberPenalty,
       popSize = 20, 
       iters = 20
     ),
@@ -81,14 +103,15 @@ optimiseSD_genetic_2 = replaceDefault(
 
 set.seed(07021916)
 OptSD_gen2 = optimiseSD(
-  simulations = radioactivePlumes_local, 
+  simulations = radioactivePlumes, 
   costFun = singleDetection,
   optimisationFun = optimiseSD_genetic_2,
   locationsAll = locAll_l, 
   locationsFix = locKeep_l, 
   locationsInitial = locInit_l[1,],
   aimCost = 0.05,
-  nameSave = "optSD_genetic_2"
+  nameSave = "optSD_genetic_2", # result is saved to file here
+  aimNumber = NULL
 )
 # OptSD_gen2 not found
 ## load generated populations and extract sampling designs and cost
@@ -99,7 +122,12 @@ SDs = list()
 for (j in 1:finalIteration){
   SDs[[j]] = list()
   for (i in 1:20){
-    costs[j,i] = evalFun(populations[i,,j])
+    costs[j,i] = numberPenalty(populations[i,,j], 
+      simulations = radioactivePlumes, 
+      costFun = singleDetection,
+      locationsAll = locAll_l,
+      locationsFix = locKeep_l,
+      aimNumber = length(locInit_l[1,]))
     SDs[[j]][[i]] = c(locAll_l[populations[i,,j] == 1], locKeep_l)
     if (sum(populations[i,,j]) > 5){
       costs[j,i] = 2  
@@ -109,4 +137,5 @@ for (j in 1:finalIteration){
 }
 apply(FUN = min, X = costs, MARGIN = 1) # best cost in each iteration
 SDs[[finalIteration]][[which(costs[finalIteration,] == min(costs[finalIteration,]))]] # best sampling design
+}
 }

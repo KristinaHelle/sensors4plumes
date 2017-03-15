@@ -7,7 +7,7 @@
 interpolationError = function(
   simulations,
   locations,
-  values,
+  kinds,
   fun_interpolation,
   fun_error,
   fun_Rpl = NULL,
@@ -19,7 +19,7 @@ interpolationError = function(
   ){
   # keep only relevant layer of simulations@values
   simulationsSubset = simulations
-  simulationsSubset@values = subset(simulations@values, values[1], drop = FALSE)
+  simulationsSubset@values = subset(simulations@values, kinds[1], drop = FALSE)
   
   # check functions (except those that are tested inside further functions)
   useRpl = FALSE

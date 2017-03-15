@@ -34,30 +34,29 @@ List
 
 \examples{
 # prepare data and functions
-data(radioactivePlumes_local)
+data(radioactivePlumes)
 
-samplePlumes = sort(sample.int(nPlumes(radioactivePlumes_local), 100))
 medianVariogram = fitMedianVariogram(
-  simulations = radioactivePlumes_local, 
-  plumes = samplePlumes,
-  locations = sample.int(nLocations(radioactivePlumes_local), 500),
-  values = 1)
+  simulations = radioactivePlumes, 
+  plumes = 1:nPlumes(radioactivePlumes),
+  locations = sample.int(nLocations(radioactivePlumes), 500),
+  kinds = 1)
 krigingVarianceMedian = 
   replaceDefault(krigingVariance, newDefaults = list(model = medianVariogram))[["fun"]]
 
 meanFun = function(x){mean(x, na.rm = TRUE)}
 
-locationsSensors = sample.int(nLocations(radioactivePlumes_local), 200)
+locationsSensors = sample.int(nLocations(radioactivePlumes), 50)
 
 spatialSpread_minDist = spatialSpread(
-    simulations = radioactivePlumes_local,
+    simulations = radioactivePlumes,
     locations = locationsSensors, 
     weightByArea = TRUE,
     fun = minimalDistance,
     fun_R = meanFun
 )
 spatialSpread_krigingVar = spatialSpread(
-    simulations = radioactivePlumes_local,
+    simulations = radioactivePlumes,
     locations = locationsSensors, 
     weightByArea = TRUE,
     fun = krigingVarianceMedian,
@@ -65,17 +64,18 @@ spatialSpread_krigingVar = spatialSpread(
   )
 
 # plot maps
-y = radioactivePlumes_local@locations
+y = radioactivePlumes@locations
 y@data$minDist = spatialSpread_minDist[["costLocations"]]
 y@data$krigVar = spatialSpread_krigingVar[["costLocations"]]
 yPoints = as(y, "SpatialPointsDataFrame")
+
+# distance to next sensor
 spplot(y, zcol = "minDist", 
        sp.layout = list("sp.points", yPoints[locationsSensors,], 
                           col = 3))
+# kriging variance
 spplot(y, zcol = "krigVar", 
        sp.layout = list("sp.points", yPoints[locationsSensors,], 
                           col = 3))
                           
-# krigingVariance
-## determine variogram and assign it to function                          
 }

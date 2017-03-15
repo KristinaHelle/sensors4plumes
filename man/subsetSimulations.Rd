@@ -51,17 +51,17 @@ SimulationsSmall_b = subset(SimulationsSmall,
                             dataPlumes = 1:2)
                             
 # effect of 'valuesOnly'
-data(radioactivePlumes_area)
-locations = sample(nLocations(radioactivePlumes_area), 15)
-plumes = sample(nPlumes(radioactivePlumes_area), 15)
-subset_fm_RNA = subset(radioactivePlumes_area, 
-                       plumes = c(plumes2, NA, 10000, NA, 0, plumes2), 
-                       locations = c(locations2, NA, 10000, NA, 0,locations2))
+data(radioactivePlumes)
+locations1 = sample(nLocations(radioactivePlumes), 15)
+plumes1 = sample(nPlumes(radioactivePlumes), 15)
+subset_fm_RNA = subset(radioactivePlumes, 
+                       plumes = c(plumes1, NA, 10000, NA, 0, plumes1), 
+                       locations = c(locations1, NA, 10000, NA, 0,locations1))
                         
-subset_mf_RNA_vO = subset(radioactivePlumes_area, 
-                          plumes = c(plumes2, NA, 0, 10000, NA, plumes2), 
-                          locations = c(locations2, NA, NA, 10000, 0, 0, locations2),
+subset_mf_RNA_vO = subset(radioactivePlumes, 
+                          plumes = c(plumes1, NA, 0, 10000, NA, plumes1), 
+                          locations = c(locations1, NA, NA, 10000, 0, 0, locations1),
                           valuesOnly = TRUE)  
-image(subset_fm_RNA@values, 1, col = rainbow(20))
-image(subset_mf_RNA_vO, 1, col = rainbow(20))
+image(subset_fm_RNA@values) 
+image(subset_mf_RNA_vO)   # with repetitions
 }
