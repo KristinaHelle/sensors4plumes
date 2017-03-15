@@ -64,12 +64,14 @@ radioactivePlumes@locations@data$p1 = getValues(
   subset(radioactivePlumes, plumes = 1, kinds = 1)@values)
 
 # interactive optimisation
+\dontrun{
 optSD_manual1 = optimiseSD_manual(simulations = radioactivePlumes, 
                                   costFun = spatialSpreadMinDist, 
                                   costMap = spatialSpreadMinDist,
                                   locationsFix = seq(1, 2001, 300),
                                   locationsInitial = seq(1, 2001, 70),
                                   locationsAll = setdiff(1:2001, seq(1,2001, 30)))
+}
 ## this result of such a manual optimisation is also in data(SDmanual)
                                  
 }
