@@ -33,6 +33,6 @@ The \code{simulations} with paths in the \code{values} updated to the new \code{
 data(radioactivePlumes_area)
 ## not run
 #radioactivePlumes_area2 = 
-  copySimulations(radioactivePlumes_area, 
-  newPath = "/test", newFile = "radioactivePlumes_area2")
+#  copySimulations(radioactivePlumes_area, 
+#  newPath = "/test", newFile = "radioactivePlumes_area2")
 }
