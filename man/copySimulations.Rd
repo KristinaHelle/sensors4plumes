@@ -30,9 +30,11 @@ The \code{simulations} with paths in the \code{values} updated to the new \code{
 \author{ Kristina B. Helle, \email{kristina.helle@uni-muenster.de}}
 
 \examples{
+\dontrun{
+library(sensors4plumesData)
 data(radioactivePlumes_area)
-## not run
-#radioactivePlumes_area2 = 
+radioactivePlumes_area2 = 
   copySimulations(radioactivePlumes_area, 
   newPath = "/test", newFile = "radioactivePlumes_area2")
+}
 }
