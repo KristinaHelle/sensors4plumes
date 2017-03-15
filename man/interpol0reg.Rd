@@ -60,6 +60,7 @@ int_1 = interpol0reg(fun_interpolation = list(fun1,fun2),
                          dataLoc = d, 
                          newdataLoc = n) 
 
+\dontrun{
 # use the same input and different functions                         
 int_2 = interpol0reg(fun_interpolation = list(fun1,fun2),
                          dataSplit = d,
@@ -69,4 +70,5 @@ int_2 = interpol0reg(fun_interpolation = list(fun1,fun2),
                          newdata = SPointsDF[n,], 
                          dataLoc = d, 
                          newdataLoc = n) 
+}
 }                         
