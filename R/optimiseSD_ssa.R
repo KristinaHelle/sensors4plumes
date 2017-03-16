@@ -114,11 +114,14 @@ moveSensors = function(
 optimiseSD_ssa = function(
                   simulations,
                   costFun,
-                  locationsAll,                       
-                  locationsFix,
-                  locationsInitial,
-                  aimCost = NULL,                                  # desired cost, stop optimisation if reached
-                  aimNumber = NULL,                                # not used but needed as parameter if used in optimiseSD
+                  locationsAll =1:nLocations(simulations),        # all possible sensor locations (as indices of simulations@locations)
+                  locationsFix = integer(0),                    # these sensors are always included to determine cost, they cannot be deleted
+                  locationsInitial = integer(0),                # current sensors that can be deleted
+                  aimCost = NA,                                  # desired cost, stop optimisation if reached
+                  aimNumber = NA,                                # not used but needed as parameter if used in optimiseSD
+                  nameSave = NA,                                 # without suffix .Rdata
+                  plot = FALSE,                                    # if each iteration is plotted
+                  verbatim = FALSE,                                 # print intermediate results and keep intermediate steps
                   maxShiftNumber = length(locationsInitial),       # how many of the sensors can be shifted in each iteration
                   startMoveProb = 0.5,                             # initial probability to move (more than one) sensors
                   maxShiftFactor = 0.2,                            # initial max size of shift (as fraction of extent)
@@ -131,13 +134,10 @@ optimiseSD_ssa = function(
                   end_acc_vG = 0.0001,                             # acceptance of worse locations in maxIterations-th iteration ("vanGroenigen")
                   cooling_vG = 0.999,                              # cooling parameter c of vanGroenigen method
                   startAcceptance_vG = 0.5,                        # cooling parameter a1 of vanGroenigen method
-                  start_acc_iI = 0.2,                              # calibration factor of acceptance for "intamapInteractive" (equals "start_p" in ssaOptim)
-                  plot = FALSE,                                    # if each iteration is plotted
-                  nameSave = NULL,                                 # without suffix .Rdata
-                  verbatim = FALSE                                 # print intermediate results and keep intermediate steps
+                  start_acc_iI = 0.2                               # calibration factor of acceptance for "intamapInteractive" (equals "start_p" in ssaOptim)
   ){
   # parameter check
-  if (is.null(aimCost)){
+  if (is.na(aimCost)){
     stop("'optimiseSD_ssa' needs a value for 'aimCost'.")
   }
   ###------------- global settings -----------------------------------
@@ -162,8 +162,8 @@ optimiseSD_ssa = function(
   ) 
   
   ## if not 'locationsInitial' start from random locations
-  if (missing(locationsInitial)){
-    if (is.null(aimNumber)){
+  if (is.na(locationsInitial)){
+    if (is.na(aimNumber)){
       stop("'locationsInitial' or 'aimNumber' needed.")
     } else {
       locationsInitial = sample(setdiff(locationsAll, locationsFix), aimNumber)
@@ -201,7 +201,7 @@ optimiseSD_ssa = function(
                                         locationsInitial = locationsInitial,
                                         locationsFix = locationsFix,
                                         costInitial = costInitial)
-    if (all(costDiffEstimate > 0) & !is.null(start_acc_vG) & !is.null(end_acc_vG)){
+    if (all(costDiffEstimate > 0) & !is.na(start_acc_vG) & !is.na(end_acc_vG)){
       cooling = ((log(start_acc_vG) * costDiffEstimate[2]) / 
                    (log(end_acc_vG) * costDiffEstimate[1])) ^ {1 / (maxIterations - 1)}
       startAcceptance = - costDiffEstimate[1]/
@@ -233,7 +233,7 @@ optimiseSD_ssa = function(
     
     jumpBack = integer(0)
   }
-  if (!is.null(nameSave)){
+  if (!is.na(nameSave)){
     filename = paste0(nameSave, ".Rdata")
     message(paste0("Sampling designs saved at ", filename, "."))
   }
@@ -352,7 +352,7 @@ optimiseSD_ssa = function(
       warning(paste("Terminated after", k, "iterations because no improvement for ", maxStableIterations, " iterations.", sep = ""))
       break
     }
-  if (!is.null(nameSave) & verbatim){
+  if (!is.na(nameSave) & verbatim){
 #    if(k > maxIterations * 0.9){
       save(SDs, report, file = filename)   
 #    }
@@ -375,7 +375,7 @@ optimiseSD_ssa = function(
 #         )
 
 #       CostCurrent = costFun(simulations = simulations, locations = locationsOld)
-#       if (!is.null(CostCurrent[["image"]])) {
+#       if (!is.na(CostCurrent[["image"]])) {
 #            require(sp)
 #            PlotPtsFix = list("sp.points", coordinates(simulations@locations)[locationsFix, , drop = FALSE],       pch = 2, col = "grey")
 #            PlotPtsInit = list("sp.points", coordinates(simulations@locations)[locationsInitial, , drop = FALSE],  pch = 1, col = "grey")
@@ -389,7 +389,7 @@ optimiseSD_ssa = function(
 #                               "\n", "best cost = ", signif(costBest, digits = 5), "\n", "Iterations = ", k)))
 #           }
 #     }
-    if (!missing(aimCost)) {
+    if (!is.na(aimCost)) {
       if (costBest <= aimCost) {
         print(paste(k, ": optimisation reached desired cost ", signif(costBest, digits = 5), sep = ""))
         end = TRUE

@@ -9,15 +9,12 @@ optimiseSD_global = function(
   locationsFix = integer(0), 
   locationsInitial = integer(0),
   aimCost = NA, 
-  aimNumber = NA,# n
-  nameSave = NA, # savePath
+  aimNumber = NA,
+  nameSave = NA, 
+  plot = FALSE,
   verbatim = FALSE,
   detectable = 1,          # layer of simulations@values with detectability
-#  n = 5,                  
-#  lowerLimit = 1,          
-#  increaseLimit = FALSE,   
   maxIterations = NA,         # maximal number of iterations, if no value given: number of all possibilities
-#  savePath = "",            
   findAllOptima = FALSE,     # if TRUE a second search is run to find all optimal designs
   findSensorNumber = FALSE  # only relevant if findAllOptima = FALSE (else automatically TRUE): if at least 'aimNumber' sensors can detect all plumes, find out how many sensors are needet to detect all plumes?
   ){

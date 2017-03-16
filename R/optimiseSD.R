@@ -122,12 +122,10 @@ optimiseSD = function(
   locationsAll = 1:nLocations(simulations),        
   locationsFix = integer(0),
   locationsInitial = integer(0),                    # can be a list (for genetic)
-  aimCost,# = NULL,
-  aimNumber,# = NULL,
+  aimCost = NA,
+  aimNumber = NA,
   optimisationFun,
-#  algorithm = optimiseSD_greedy, # "SSA", "greedy", "genetic", "global"
-#  pathSave = "",
-  nameSave = "optimiseSD", # to be used as part of the filenames; kind of files and filenames may depend on algorithm
+  nameSave = NA, #"optimiseSD", # to be used as part of the filenames; kind of files and filenames may depend on algorithm
   plot = FALSE,
   verbatim = FALSE,
   ...

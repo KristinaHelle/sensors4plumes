@@ -9,16 +9,17 @@ In each iteration SSA moves one or more sensors randomly within their neighbourh
 }
 \usage{
 optimiseSD_ssa(simulations, costFun,
-  locationsAll, locationsFix, locationsInitial,
-  aimCost = NULL, aimNumber = NULL,            
+  locationsAll = 1:nLocations(simulations), locationsFix = integer(0), locationsInitial = integer(0),
+  aimCost = NA, aimNumber = NA,
+  nameSave = NA, plot = FALSE, verbatim = FALSE,
   maxShiftNumber = length(locationsInitial), startMoveProb = 0.5, 
   maxShiftFactor = 0.2, minShiftFactor = 0.01,
   maxIterations = 5000, maxStableIterations = 500, 
   maxIterationsJumpBack = maxStableIterations - 1, 
   acceptanceMethod = "vanGroenigen", 
   start_acc_vG = 0.5, end_acc_vG = 0.0001, cooling_vG = 0.999, startAcceptance_vG = 0.5, 
-  start_acc_iI = 0.2,
-  plot = FALSE, nameSave = NULL, verbatim = FALSE)
+  start_acc_iI = 0.2
+  )
 }
 
 \arguments{
@@ -29,6 +30,9 @@ optimiseSD_ssa(simulations, costFun,
   \item{locationsInitial}{indices of \code{locations} where sensors are initially}
   \item{aimCost}{limit value of the \code{costFun}: the result has to fall below}
   \item{aimNumber}{if no \code{locationsInitial} given, it starts from this number of random locations}
+  \item{nameSave}{\code{character} path and name (without suffix!) where to save intermediate results (sampling design of each iteration)}
+  \item{plot}{if iteration is plotted (currently disabled)}
+  \item{verbatim}{print intermediate results and keep sampling desings and cost of all iterations}
   \item{maxShiftNumber}{how many of the sensors can maximally be shifted in each iteration}
   \item{startMoveProb}{initial probability to move sensors -in any case at least one sensor is moved}
   \item{maxShiftFactor}{initial maximal size of shifts (as fraction of extent)}
@@ -42,9 +46,6 @@ optimiseSD_ssa(simulations, costFun,
   \item{cooling_vG}{cooling parameter (for \code{acceptanceMethod = "vanGroenigen"}), see details}
   \item{startAcceptance_vG}{second cooling parameter (for \code{acceptanceMethod = "vanGroenigen"}), see details}
   \item{start_acc_iI}{calibration factor of acceptance for \code{acceptanceMethod = "intamapInteractive"} (equals \code{start_p} in \code{ssaOptim} in package \code{intamapInteractive}), see details}
-  \item{plot}{if iteration is plotted (currently disabled)}
-  \item{nameSave}{\code{character} path and name (without suffix!) where to save intermediate results (sampling design of each iteration)}
-  \item{verbatim}{print intermediate results and keep sampling desings and cost of all iterations}
 }
 
 \details{
@@ -105,8 +106,9 @@ locAll3 = c(sample(setdiff(1:I,
 costInitial1 = multipleDetection(simulations = radioactivePlumes, 
   locations = c(locKeep3, locDel3))
 
-# run optimisation (result is saved to disk)
+# run optimisation
 \dontrun{
+## takes some time
 optSSA1 = optimiseSD(
   simulations = radioactivePlumes,
   costFun = multipleDetection,
@@ -121,15 +123,16 @@ optSSA1 = optimiseSD(
 ## this result is also in data(SDssa)
 
 # visualise 
-optSSA1$report = optSSA1$report[-nrow(optSSA1$report),]
+data(SDssa)
+SDssa$report = SDssa$report[-nrow(SDssa$report),]
 ## cost curve
-plot(optSSA1$report$cost, pch = ".", col = optSSA1$report$accepted + 2)
+plot(SDssa$report$cost, pch = ".", col = SDssa$report$accepted + 2)
 ## designs
 allSDs = subsetSDF(radioactivePlumes@locations,
-  locations = c(locKeep3, locDel3, optSSA1$SD[1:5], unique(as.integer(optSSA1$SDs_test))))
+  locations = c(locKeep3, locDel3, SDssa$SD[1:5], unique(as.integer(SDssa$SDs_test))))
 AllSDs = as(allSDs, "SpatialPointsDataFrame")  
 radioactivePlumes@locations@data$nDetectable = 
-  summaryLocations(radioactivePlumes, fun = sum_, kinds = "detectable")[[2]] 
+  summaryLocations(radioactivePlumes, fun = sum, kinds = "detectable")[[2]] 
 spplot(radioactivePlumes@locations, zcol = "nDetectable",
   sp.layout = list("sp.points", AllSDs, 
   pch = c(rep(4, length(locKeep3)), 

@@ -9,9 +9,9 @@ This function optimises a sampling design to achieve minimal cost for a given co
 \usage{
 optimiseSD(simulations, costFun,
   locationsAll = 1:nLocations(simulations), locationsFix = integer(0), locationsInitial = integer(0),
-  aimCost, aimNumber, 
+  aimCost = NA, aimNumber = NA, 
   optimisationFun,
-  nameSave ="optimiseSD", plot = FALSE, verbatim = FALSE, ...)
+  nameSave = NA, plot = FALSE, verbatim = FALSE, ...)
 }
 
 \arguments{

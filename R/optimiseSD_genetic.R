@@ -101,11 +101,12 @@ optimiseSD_genetic = function(
   locationsFix = integer(0), 
   locationsInitial = integer(0), # vector or matrix; if matrix: row ~ design
   aimCost = NA, 
-  aimNumber = NULL,
+  aimNumber = NA,
   nameSave = NA,
+  plot = FALSE,
   verbatim = FALSE,
   evalFunc = numberPenalty,
-  #monitorFunc = NULL,
+  #monitorFunc = NA,
   popSize = 200, 
   iters = 100, 
   mutationChance = NA,
@@ -124,11 +125,11 @@ optimiseSD_genetic = function(
     }
   }
   ## generate locationsInitial - if missing
-  if (missing(locationsInitial)){
-    if (! missing(aimNumber)){
+  if (is.na(locationsInitial)){
+    if (! is.na(aimNumber)){
       locationsInitial = t(replicate(popSize - 1, 
                                sample(locationsAll, aimNumber))) 
-      warning("All initial locations are chosen randomly.")
+      message("All initial locations are chosen randomly.")
     } else {
       stop("At least one of 'locationsInitial' or 'aimNumber' must be given.")
     }
@@ -147,7 +148,7 @@ optimiseSD_genetic = function(
   nAll = length(locationsAll)
   nFix = length(locationsFix)
 
-  if (is.null(aimNumber)){
+  if (is.na(aimNumber)){
     if (is.null(dim(locationsInitial))){
       aimNumber = length(locationsInitial)  
     } else {

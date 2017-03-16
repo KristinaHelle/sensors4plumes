@@ -11,13 +11,10 @@ Optimisation of sensor locations by a binary genetic algorithm
 }
 \usage{
 optimiseSD_genetic(simulations, costFun, 
-  locationsAll = 1:nLocations(simulations), locationsFix = integer(0), locationsInitial = integer(0),
-  aimCost = NA, aimNumber = NULL,
-  nameSave = NA, verbatim = FALSE,
-  evalFunc = numberPenalty, 
-  popSize = 200, iters = 100, 
-  mutationChance = NA, elitism = NA
-)
+  locationsAll = 1:nLocations(simulations), locationsFix = integer(0), locationsInitial = integer(0), 
+  aimCost = NA, aimNumber = NA,
+  nameSave = NA, plot = FALSE, verbatim = FALSE,
+  evalFunc = numberPenalty, popSize = 200, iters = 100, mutationChance = NA, elitism = NA)
 numberPenalty(chromosome, simulations, costFun, locationsAll, locationsFix, aimNumber, penalty = 2)
 }
 
@@ -31,6 +28,7 @@ Some arguments are the same for all optimisation algorithms, they are marked by 
   \item{aimCost}{\code{*}}
   \item{aimNumber}{\code{*}; if \code{locationsInitial} given it must be \code{NULL} and is ignored, else it defines the number of sensors in the sets of the initial population}
   \item{nameSave}{\code{*}}
+  \item{plot}{not yet implemented}
   \item{verbatim}{if more output is to be written to the console}
   \item{evalFunc}{\code{**}; this function has to take a chromosome and return its cost (including fix sensors); it can be modified by \code{\link{replaceDefault}} with \code{type = "evalFunc.rbga.bin"}}
   \item{popSize}{\code{**}} 
@@ -77,17 +75,16 @@ optimiseSD_genetic_1 = replaceDefault(
   type = "optimisationFun.optimiseSD")[[1]]
 
 # run optimisation
+\dontrun{
+## takes some time
 OptSD_gen1 = optimiseSD(
   simulations = radioactivePlumes, 
   costFun = singleDetection,
   optimisationFun = optimiseSD_genetic_1,
   locationsAll = locAll_l, 
   locationsFix = locKeep_l, 
-  locationsInitial = locInit_l[1,],
-  nameSave = NA, # needed, as else NULL is forwarded and parameter destroyed 
-  aimCost = NA, # needed, as else NULL is forwarded and parameter destroyed 
-  aimNumber = NULL # needed to be forwarded and then be correctly interpreted as missing
-)
+  locationsInitial = locInit_l[1,])
+}
 ## this result is also in data(SDgenetic)
 
 \dontrun{
@@ -110,8 +107,7 @@ OptSD_gen2 = optimiseSD(
   locationsFix = locKeep_l, 
   locationsInitial = locInit_l[1,],
   aimCost = 0.05,
-  nameSave = "optSD_genetic_2", # result is saved to file here
-  aimNumber = NULL
+  nameSave = "optSD_genetic_2" # result is saved to file here
 )
 # OptSD_gen2 not found
 ## load generated populations and extract sampling designs and cost

@@ -5,18 +5,21 @@
 
 optimiseSD_manual = function(simulations, 
                              costFun, 
-                             costMap,
                              locationsAll = 1:nLocations(simulations), 
                              locationsFix = integer(0), 
                              locationsInitial = integer(0),
-                             aimCost = NA, aimNumber = NULL,
-                             nameSave = NA, verbatim = FALSE,
+                             aimCost = NA, aimNumber = NA,
+                             nameSave = NA, plot = TRUE, verbatim = FALSE,
+                             costMap = NA,
                              maxIterations = 10,
                              valuesPlot = integer(0), # locations$data to plot in addition to the computed cost map (by default none)
                              colors = grey.colors
                              ){
   
   # ------------------------- prepare  ------------------------------ #
+#  if (is.na(costMap)){
+#    stop("'costMap' required.")
+#  }
   # - - - - clean location indices - - - - - - -
   locations = cleanIndices(
     locationsTotal = 1:nLocations(simulations),#length(simulations@locations),
@@ -56,8 +59,8 @@ optimiseSD_manual = function(simulations,
   
   # point settings: all, fix, current; added, deleted; invalid  (both: in last step)
   colPoints = c(rep(4, 3), 3, 2, 7)
-  pchPoints = c(20, 8, 20, 20, 1, 20)
-  cexPoints = c(0.1, 1, 1, 1, 1, 0.1)
+  pchPoints = c(8, 20, 20, 20, 1, 20)
+  cexPoints = c(1, 0.1, 1, 1, 1, 0.1)
   
   # trellis settings
   settings = list(regions = list(col = colors), 
@@ -84,8 +87,8 @@ optimiseSD_manual = function(simulations,
 
     # - - - - - points - - -- - - - - - 
     # current points for plotting
-    plotPoints = list(list('sp.points', simPoints[locationsFix,], col = colPoints[2], pch = pchPoints[2], cex = cexPoints[2]),
-                      list('sp.points', simPoints[locationsAll,], col = colPoints[1], pch = pchPoints[1], cex = cexPoints[1]),
+    plotPoints = list(list('sp.points', simPoints[locationsFix,], col = colPoints[1], pch = pchPoints[1], cex = cexPoints[1]),
+                      list('sp.points', simPoints[locationsAll,], col = colPoints[2], pch = pchPoints[2], cex = cexPoints[2]),
                       list('sp.points', simPoints[locationsCurrent,], col = colPoints[3], pch = pchPoints[3], cex = cexPoints[3]))
     
     if (addORdel == "a"){

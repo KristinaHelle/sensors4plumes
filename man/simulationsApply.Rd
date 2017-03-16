@@ -70,7 +70,7 @@ The subset of values (defined by \code{plumes} and \code{locations}) is only kep
 \author{ kristina.helle@uni-muenster.de  }
 
 \examples{
-data(radioactivePlumes)
+demo(radioactivePlumes_addProperties)
 
 # number of not detected plumes for given set of 10 sensors, weighted by total dose of plumes
 sensors = sample.int(nLocations(radioactivePlumes), 10)

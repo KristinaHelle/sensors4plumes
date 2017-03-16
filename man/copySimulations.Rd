@@ -35,6 +35,6 @@ library(sensors4plumesData)
 data(radioactivePlumes_area)
 radioactivePlumes_area2 = 
   copySimulations(radioactivePlumes_area, 
-  newPath = "/test", newFile = "radioactivePlumes_area2")
+  newPath = paste0(path.package("sensors4plumesData"), newFile = "radioactivePlumes_area2")
 }
 }

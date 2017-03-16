@@ -8,11 +8,11 @@ Runs greedy optimisation for a given Simulations object and cost function. The a
 The algorithm may take into account fix sensors and start from a given initial sensor set.
 }
 \usage{
-optimiseSD_greedy(simulations, costFun, 
-  locationsAll, locationsFix, locationsInitial, 
-  aimCost, aimNumber,
-  maxIterations = 100, swap = FALSE, 
-  nameSave, verbatim = FALSE)
+optimiseSD_greedy(simulations, costFun,  
+  locationsAll = 1:nLocations(simulations), locationsFix = integer(0), locationsInitial = integer(0), 
+  aimCost = NA, aimNumber = NA,
+  nameSave = NA, plot = FALSE, verbatim = FALSE,
+  maxIterations = 100, swap = FALSE)
 }
 
 \arguments{
@@ -23,10 +23,11 @@ optimiseSD_greedy(simulations, costFun,
   \item{locationsInitial}{indices of \code{locations} where sensors are initially}
   \item{aimCost}{limit value of the \code{costFun}: the result has to fall below}
   \item{aimNumber}{desired number of sensors; the result has to have no more sensors (\code{locationsFix} do not count)}
+    \item{nameSave}{\code{character} path and name (without suffix!) where to save intermediate results (sampling design of each iteration)}
+  \item{plot}{not implemented yet}  
+  \item{verbatim}{\code{logical}, not implemented yet}
   \item{maxIterations}{maximal number of iterations, then it stops}
   \item{swap}{\code{logical} if algorithm continues, when greedy optimum is found, by adding and deleting sensors in turns}
-  \item{nameSave}{\code{character} path and name (without suffix!) where to save intermediate results (sampling design of each iteration)}
-  \item{verbatim}{\code{logical}, not implemented yet}
 }
 
 \details{
@@ -68,8 +69,7 @@ locInit1 = sample.int(I, 2)
 locKeep1 = sample(setdiff(1:I, locInit1), 2)
 locAll1 = c(sample(setdiff(1:I, c(locInit1, locKeep1)), 4), locInit1)
 
-# run optimisation (saves result to disk)
-\dontrun{
+# run optimisation
 optSD_greedy = optimiseSD(
   simulations = SimulationsSmall,
   costFun = minDist,    
@@ -79,5 +79,5 @@ optSD_greedy = optimiseSD(
   locationsInitial = locInit1,                
   aimNumber = 7                
 )
-}
+## this result is also in data(SDgreedy)
 }

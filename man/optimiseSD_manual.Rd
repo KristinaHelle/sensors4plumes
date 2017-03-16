@@ -7,12 +7,11 @@ Plot cost map for interactive adding and deleting of sensors
 Given a \code{costMap} function and a set of sensors it computes the cost map and plots it. Then the user can interactively add or delete sensors and plot the resulting cost and cost map..   
 }
 \usage{
-optimiseSD_manual(simulations, costFun, costMap,
+optimiseSD_manual(simulations, costFun,
   locationsAll = 1:nLocations(simulations), locationsFix = integer(0), locationsInitial = integer(0),
-  aimCost = NA, aimNumber = NULL,
-  nameSave = NA, verbatim = FALSE,
-  maxIterations = 10,
-  valuesPlot = integer(0), colors = grey.colors)
+  aimCost = NA, aimNumber = NA,
+  nameSave = NA, plot = TRUE, verbatim = FALSE,
+  costMap = NA, maxIterations = 10, valuesPlot = integer(0), colors = grey.colors)
 
 }
 
@@ -20,15 +19,17 @@ optimiseSD_manual(simulations, costFun, costMap,
 Some arguments are the same for all optimisation algorithms, they are marked by a \code{*}, for detail see \code{\link{optimiseSD}}. Others are directly forwarded to \code{\link[genalg]{rbga.bin}}, they are marked by \code{**}
   \item{simulations}{\code{*}}
   \item{costFun}{\code{*}}
-  \item{costMap}{A function to compute a cost value for each location,
-  must return a list with \code{"costLocations"} (vector of length equal to \code{nLocations(simulations)}); needs to have the same parameters (\code{simulations}, \code{locations}) as \code{costFun} and may also be prepared by \code{replaceDefault} with \code{type = "costFun.optimiseSD"}.}
   \item{locationsAll}{\code{*}}
   \item{locationsFix}{\code{*}}
   \item{locationsInitial}{\code{*}}
   \item{aimCost}{\code{*} ignored}
   \item{aimNumber}{\code{*} ignored}
   \item{nameSave}{\code{*} ignored}
+  \item{plot}{\code{*} ignored}
   \item{verbatim}{ ignored}
+  \item{costMap}{A function to compute a cost value for each location,
+  must return a list with \code{"costLocations"} (vector of length equal to \code{nLocations(simulations)}); needs to have the same parameters (\code{simulations}, \code{locations}) as \code{costFun} and may also be prepared by \code{replaceDefault} with \code{type = "costFun.optimiseSD"}.}
+
   \item{maxIterations}{maximal number of iterations to add or delete sensors}
   \item{valuesPlot}{names of values in the data associated with the locations of \code{simulations} to be plotted in addition to the cost map}
   \item{colors}{color ramp for plotting - a function like \code{grey.colors})}
@@ -63,15 +64,30 @@ spatialSpreadMinDist = replaceDefault(
 radioactivePlumes@locations@data$p1 = getValues(
   subset(radioactivePlumes, plumes = 1, kinds = 1)@values)
 
-# interactive optimisation
+optimSD_man_minDist = replaceDefault(
+  optimiseSD_manual,
+  newDefaults = list(
+    costMap = spatialSpreadMinDist
+    )
+)[["fun"]]
+
 \dontrun{
-optSD_manual1 = optimiseSD_manual(simulations = radioactivePlumes, 
+# interactive optimisation
+## inside optimiseSD
+optSD_manual1 = optimiseSD(simulations = radioactivePlumes, 
+                          costFun = spatialSpreadMinDist,
+                          optimisationFun = optimSD_man_minDist,
+                          locationsFix = seq(1, 2001, 300),
+                          locationsInitial = seq(1, 2001, 70),
+                          locationsAll = setdiff(1:2001, seq(1,2001, 30))))
+                          
+## directly using optimiseSD_manual
+optSD_manual2 = optimiseSD_manual(simulations = radioactivePlumes, 
                                   costFun = spatialSpreadMinDist, 
                                   costMap = spatialSpreadMinDist,
                                   locationsFix = seq(1, 2001, 300),
                                   locationsInitial = seq(1, 2001, 70),
                                   locationsAll = setdiff(1:2001, seq(1,2001, 30)))
 }
-## this result of such a manual optimisation is also in data(SDmanual)
-                                 
+## the result of such a manual optimisation is also in data(SDmanual)
 }

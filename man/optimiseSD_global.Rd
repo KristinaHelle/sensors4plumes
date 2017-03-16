@@ -10,7 +10,7 @@ This optimisation works only for a special cost function: if the values are logi
 optimiseSD_global(simulations, costFun = NA, 
   locationsAll = 1:nLocations(simulations), locationsFix = integer(0), locationsInitial = integer(0),
   aimCost = NA, aimNumber = NA,
-  nameSave = NA, verbatim = FALSE,
+  nameSave = NA, plot = FALSE, verbatim = FALSE,
   detectable = 1, maxIterations = NA,  
   findAllOptima = FALSE, findSensorNumber = FALSE
   )
@@ -26,6 +26,7 @@ Some arguments are the same for all optimisation algorithms, they are marked by 
   \item{aimCost}{\code{*}, ignored}
   \item{aimNumber}{\code{*}}
   \item{nameSave}{\code{*}}
+  \item{plot}{not implemented yet}
   \item{verbatim}{if more output is to be written to the console}
   \item{detectable}{which layer of the values of \code{simulations} to use, character or integer}
   \item{maxIterations}{stop when this number of sensor sets was tested (if \code{findAllOptima = TRUE} this is applied to each search i.e. to the one to find the maximal number of detectable plumes and to the one to find all optima); if \code{maxIterations} is below the number of sensor sets to actually be tested, the result may not be the global optimum.}

@@ -138,23 +138,23 @@ determineNextStep = function(
 optimiseSD_greedy = function(
   simulations,                     # simulations object to optimise sensors for; forwarded to 'costFun', 'locations...' must be subset of locations else they are ignored
   costFun,                         # function to compute cost 
-  locationsAll,                    # all possible sensor locations (as indices of simulations@locations)
-  locationsFix,                    # these sensors are always included to determine cost, they cannot be deleted
-  locationsInitial,                # current sensors that can be deleted
-  aimCost,# = NULL,
-  aimNumber,# = NULL,
+  locationsAll =1:nLocations(simulations),        # all possible sensor locations (as indices of simulations@locations)
+  locationsFix = integer(0),                    # these sensors are always included to determine cost, they cannot be deleted
+  locationsInitial = integer(0),                # current sensors that can be deleted
+  aimCost = NA,
+  aimNumber = NA,
+  nameSave = NA,
+  plot = FALSE, 
+  verbatim = FALSE,
   #  kindAim,                         # c("cost", "number"): if aim is "cost", sensors are added until cost is below 'aim'; if aim is "number", sensors are reduced to not extend this number 
   #  aim,                             # list: number, cost; cost limit or maximal number of sensors; 
   #  keepInitial = FALSE,                     # if initial sensors may be replaced
   maxIterations = 100,             # after this number of iterations search is stopped 
-  swap = FALSE,                      # if optimisation is to be continued by adding and deleting in turns after greedy optimum is reached
-  nameSave,# = NULL                        # without suffix .Rdata
-#  plot = FALSE, 
-  verbatim = FALSE
+  swap = FALSE                      # if optimisation is to be continued by adding and deleting in turns after greedy optimum is reached
 ){
   costFun = replaceDefault(costFun, newDefaults = list(simulations = simulations))[[1]]
   # ------------------- aim --------------------------------
-  whichAim = c(!missing(aimNumber), !missing(aimCost))
+  whichAim = c(!is.na(aimNumber), !is.na(aimCost))
   if (identical(whichAim, c(TRUE, TRUE))){
     warning("The optimisation will aim to achieve the desired cost 'aimCost'; 
             the desired number of sensors 'aimNumber' is ignored.")
@@ -175,7 +175,7 @@ optimiseSD_greedy = function(
     aim = length(locationsInitial)
   }
   
-  if (!missing(nameSave)){
+  if (!is.na(nameSave)){
     filename = paste0(nameSave, ".Rdata")
     message(paste0("Sampling designs saved at ", filename, "."))
   }
@@ -240,8 +240,7 @@ optimiseSD_greedy = function(
         l = l + 1 
         # save current sampling design
         SDs[[l]] = locationsCurrent
-        #if (!is.null(nameSave)){
-        if (!missing(nameSave)){
+        if (!is.na(nameSave)){
           save(SDs, file = filename)  
         }
         
@@ -285,8 +284,7 @@ optimiseSD_greedy = function(
         locationsAddable = setdiff(AddFrom, locationsCurrent)                                                
         l = l + 1 
         SDs[[l]] = locationsCurrent
-        #if (!is.null(nameSave)){
-        if (!missing(nameSave)){
+        if (!is.na(nameSave)){
           save(SDs, file = filename)           
         }
 
@@ -384,8 +382,7 @@ optimiseSD_greedy = function(
         locationsCurrent = c(locationsDeletable, locationsKeep)                                                    
         l = l + 1  
         SDs[[l]] = locationsCurrent                                                                  
-        #if (!is.null(nameSave)){
-        if (!missing(nameSave)){
+        if (!is.na(nameSave)){
           save(SDs, file = filename)  
         }
         # determine how to continue: add, delete, or stop
@@ -436,8 +433,7 @@ optimiseSD_greedy = function(
            finalSDwhich = intersect(costAim, intersect(minLength_costAim, cheapest_minLength_costAim))
          }
   )
-  #if (!is.null(nameSave)){
-  if (!missing(nameSave)){
+  if (!is.na(nameSave)){
     save(SDs, file = filename)  
   }
   out = list()
