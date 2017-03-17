@@ -9,7 +9,8 @@ The algorithm may take into account fix sensors and start from a given initial s
 }
 \usage{
 optimiseSD_greedy(simulations, costFun,  
-  locationsAll = 1:nLocations(simulations), locationsFix = integer(0), locationsInitial = integer(0), 
+  locationsAll = 1:nLocations(simulations), locationsFix = integer(0), 
+  locationsInitial = integer(0), 
   aimCost = NA, aimNumber = NA,
   nameSave = NA, plot = FALSE, verbatim = FALSE,
   maxIterations = 100, swap = FALSE)

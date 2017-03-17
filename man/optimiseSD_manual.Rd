@@ -8,7 +8,8 @@ Given a \code{costMap} function and a set of sensors it computes the cost map an
 }
 \usage{
 optimiseSD_manual(simulations, costFun,
-  locationsAll = 1:nLocations(simulations), locationsFix = integer(0), locationsInitial = integer(0),
+  locationsAll = 1:nLocations(simulations), locationsFix = integer(0), 
+  locationsInitial = integer(0),
   aimCost = NA, aimNumber = NA,
   nameSave = NA, plot = TRUE, verbatim = FALSE,
   costMap = NA, maxIterations = 10, valuesPlot = integer(0), colors = grey.colors)

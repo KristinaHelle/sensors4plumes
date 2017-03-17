@@ -11,11 +11,13 @@ Optimisation of sensor locations by a binary genetic algorithm
 }
 \usage{
 optimiseSD_genetic(simulations, costFun, 
-  locationsAll = 1:nLocations(simulations), locationsFix = integer(0), locationsInitial = integer(0), 
+  locationsAll = 1:nLocations(simulations), locationsFix = integer(0), 
+  locationsInitial = integer(0), 
   aimCost = NA, aimNumber = NA,
   nameSave = NA, plot = FALSE, verbatim = FALSE,
   evalFunc = numberPenalty, popSize = 200, iters = 100, mutationChance = NA, elitism = NA)
-numberPenalty(chromosome, simulations, costFun, locationsAll, locationsFix, aimNumber, penalty = 2)
+numberPenalty(chromosome, simulations, costFun, locationsAll, locationsFix, aimNumber, 
+  penalty = 2)
 }
 
 \arguments{
@@ -132,6 +134,7 @@ for (j in 1:finalIteration){
   }  
 }
 apply(FUN = min, X = costs, MARGIN = 1) # best cost in each iteration
-SDs[[finalIteration]][[which(costs[finalIteration,] == min(costs[finalIteration,]))]] # best sampling design
+# best sampling design:
+SDs[[finalIteration]][[which(costs[finalIteration,] == min(costs[finalIteration,]))]] 
 }
 }

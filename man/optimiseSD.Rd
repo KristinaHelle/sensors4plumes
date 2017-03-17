@@ -8,7 +8,8 @@ This function optimises a sampling design to achieve minimal cost for a given co
 }
 \usage{
 optimiseSD(simulations, costFun,
-  locationsAll = 1:nLocations(simulations), locationsFix = integer(0), locationsInitial = integer(0),
+  locationsAll = 1:nLocations(simulations), locationsFix = integer(0), 
+  locationsInitial = integer(0),
   aimCost = NA, aimNumber = NA, 
   optimisationFun,
   nameSave = NA, plot = FALSE, verbatim = FALSE, ...)

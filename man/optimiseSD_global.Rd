@@ -8,7 +8,8 @@ This optimisation works only for a special cost function: if the values are logi
 }
 \usage{
 optimiseSD_global(simulations, costFun = NA, 
-  locationsAll = 1:nLocations(simulations), locationsFix = integer(0), locationsInitial = integer(0),
+  locationsAll = 1:nLocations(simulations), locationsFix = integer(0), 
+  locationsInitial = integer(0),
   aimCost = NA, aimNumber = NA,
   nameSave = NA, plot = FALSE, verbatim = FALSE,
   detectable = 1, maxIterations = NA,  
@@ -100,14 +101,15 @@ sum(undetedtedPlumes)/nPlumes(completeExample) == optSD_global$cost
 ## map of undetected plumes
 detectablePlumesLoc = matrix(getValues(completeExample@values), 
   byrow = TRUE, ncol = nPlumes(completeExample))
-completeExample@locations@data$detectable = apply(FUN = sum, X = detectablePlumesLoc, MARGIN = 1)
+completeExample@locations@data$detectable = apply(FUN = sum, X = detectablePlumesLoc, 
+	MARGIN = 1)
 
 SDopt = as(subsetSDF(completeExample@locations,
                    locations =  optSD_global$SD[1,]),
          "SpatialPointsDataFrame")
        
 spplot(completeExample@locations, zcol = "detectable",
-       sp.layout = list(list("sp.points", 
-                        SpatialPoints(coords = coordinates(SDopt), proj4string = CRS(proj4string(SDopt))),
+  sp.layout = list(list("sp.points", 
+  SpatialPoints(coords = coordinates(SDopt), proj4string = CRS(proj4string(SDopt))),
                         col = 3, cex = 2, lwd = 1.5)))
 }

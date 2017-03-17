@@ -8,8 +8,9 @@ Apply functions to the \code{@values} of Simulations objects or to Raster* objec
 }
 \usage{
 simulationsApply(simulations, 
-  locations = 1:nLocations(simulations), plumes = 1:nPlumes(simulations), kinds = 1:nKinds(simulations), 
-  fun = NA, fun_p = NA, fun_l = NA, fun_pl = NA, fun_Rp = NA, fun_Rl = NA, fun_Rpl = NA, fun_Rpl_cellStats = NA, 
+  locations = 1:nLocations(simulations), plumes = 1:nPlumes(simulations), 
+  kinds = 1:nKinds(simulations), fun = NA, fun_p = NA, fun_l = NA, fun_pl = NA, 
+  fun_Rp = NA, fun_Rl = NA, fun_Rpl = NA, fun_Rpl_cellStats = NA, 
   nameSave = "simulationsApply", overwrite = FALSE,
   chunksize = 1e+7, keepSubset = FALSE, ...)
 }
