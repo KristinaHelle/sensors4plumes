@@ -15,7 +15,7 @@ Data may extend the size of the memory; it can be provided either as raster maps
 \usage{
 loadSimulations(basicPath = ".", readBy = NA, 
   multilayer = "kinds", region, bBox, 
-  savePath = ".", overwrite = FALSE, ...)
+  nameSave = NA, overwrite = FALSE, ...)
 %loadSimulations(basicPath = ".", 
 %  readBy = c(NA, "scan", "raster"), 
 %  multilayer = c("kinds", "plumes"), 

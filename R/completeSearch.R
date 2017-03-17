@@ -11,7 +11,7 @@ completeSearch = function(Detectable,
                           lowerLimit = 1,                                       # only search for sensors that detect at least so many plumes
                           increaseLimit = FALSE,                                # if TRUE, the lower limit is increased to the current best cost + 1 every time the current best cost >= current lowerLimit; if FALSE lowerLimit is constant
                           iterations = NA,                                      # maximal number of iterations, if no value given: number of all possibilities
-                          savePath = ""                                         # path to save results, if it is a directory, it has to end with /
+                          nameSave = NA                                         # path to save results, if it is a directory, it has to end with /
   ){
   out = list()
   Time = date()
@@ -91,7 +91,7 @@ completeSearch = function(Detectable,
   cCandidates[[i]]$use = cCandidates[[i]]$nPlumesMax >= lowerLimit
   out[["cCandidates"]] = cCandidates[[1]]
   
-#! save.image(file = paste(savePath, "initialWorkspace.Rdata", sep = ""))
+#! save.image(file = paste(nameSave, "initialWorkspace.Rdata", sep = ""))
   for (k in 1:(n+1)){
     nRnC[[k]] = matrix(nrow = 0, ncol = 2)  
   }
@@ -116,8 +116,8 @@ completeSearch = function(Detectable,
           if (increaseLimit){
             lowerLimit = M + 1
           }
-          if(!is.na(savePath)){
-            save(finalSD, file = paste0(savePath, "_finalSD.Rdata", sep = ""))
+          if(!is.na(nameSave)){
+            save(finalSD, file = paste0(nameSave, "_finalSD.Rdata", sep = ""))
           } 
           i = 0
           break
@@ -130,8 +130,8 @@ completeSearch = function(Detectable,
               thisSD[k] = as.character(cCandidates[[k]]$name[cSD[k]])
             }
             finalSD = rbind(finalSD, thisSD)
-            if(!is.na(savePath)){
-              save(finalSD, file = paste0(savePath, "_finalSD.Rdata", sep = ""))
+            if(!is.na(nameSave)){
+              save(finalSD, file = paste0(nameSave, "_finalSD.Rdata", sep = ""))
             }
             break
           }  
@@ -186,8 +186,8 @@ completeSearch = function(Detectable,
         nPlumesThisSD = sum(apply(FUN = any, Detectable[thisSD,,drop = FALSE], MARGIN = 2))
         if(nPlumesThisSD >= lowerLimit){
           finalSD = rbind(finalSD, thisSD)
-          if(!is.na(savePath)){
-            save(finalSD, file = paste0(savePath, "_finalSD.Rdata", sep = ""))
+          if(!is.na(nameSave)){
+            save(finalSD, file = paste0(nameSave, "_finalSD.Rdata", sep = ""))
           }  
           Time = c(Time, Success = date())
           print(paste0("Success [", date(), "]: ", paste(thisSD, collapse = " ")))
@@ -222,13 +222,13 @@ completeSearch = function(Detectable,
     }
     # save result each time first sensor changes
     if(i == 1){
-      if(!is.na(savePath)){
-        save(allSD, nRnC, file =  paste0(savePath, "_SD_nRnC_", cSD[1], ".Rdata", sep = ""))
+      if(!is.na(nameSave)){
+        save(allSD, nRnC, file =  paste0(nameSave, "_SD_nRnC_", cSD[1], ".Rdata", sep = ""))
       }
       allSD = matrix(nrow = 0, ncol = n)
       
-#!     save(Time, finalSD, cCandidates, lowerLimit, cColumns, cRows, file = paste(savePath, "currentWorkspace_", cSD[1], ".Rdata", sep = ""))
-      #!save(nRnC, file =  paste(savePath, "nRnC_", cSD[1], ".Rdata", sep = ""))
+#!     save(Time, finalSD, cCandidates, lowerLimit, cColumns, cRows, file = paste(nameSave, "currentWorkspace_", cSD[1], ".Rdata", sep = ""))
+      #!save(nRnC, file =  paste(nameSave, "nRnC_", cSD[1], ".Rdata", sep = ""))
       nRnC = list()
       for (k in 1:(n+1)){
         nRnC[[k]] = matrix(nrow = 0, ncol = 2)  
@@ -245,9 +245,9 @@ completeSearch = function(Detectable,
   }
   # --------------------- output --------------------------------------------- #
   Time = c(Time, End = date())
-#!  save.image(file = paste(savePath, "finalWorkspace_", cSD[1], ".Rdata", sep = ""))
-  if(!is.na(savePath)){
-    save.image(file = paste0(savePath, "_finalWorkspace.Rdata", sep = ""))                  
+#!  save.image(file = paste(nameSave, "finalWorkspace_", cSD[1], ".Rdata", sep = ""))
+  if(!is.na(nameSave)){
+    save.image(file = paste0(nameSave, "_finalWorkspace.Rdata", sep = ""))                  
   }
   out[["finalSD"]] = finalSD
   out[["lowerLimit"]] = lowerLimit

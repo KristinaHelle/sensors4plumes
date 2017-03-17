@@ -6,7 +6,7 @@ cbind.Simulations = function(
   ..., # Simulations objects; if locations are the same and as well names of values and plumes, plumes (and values) are combined 
   #  saveName, # filename for new file to be created, if missing, random unique name is used
   #  saveDir, 
-  savePath = ".", 
+  nameSave = NA, 
   overwrite = FALSE
 ){
   dots = list(...)
@@ -62,7 +62,7 @@ cbind.Simulations = function(
     values_new[[layerNames[i]]] = raster(nrow = nL, ncol = sum(nP), xmn = -90, xmx = 90, ymn = -90, ymx = 90, crs = "+init=epsg:4326")
     if(bs$n > 1){
       values_new[[layerNames[i]]] = writeStart(values_new[[layerNames[i]]], 
-                                               filename = paste0(savePath, "_", layerNames[i], ".grd"),
+                                               filename = paste0(nameSave, "_", layerNames[i], ".grd"),
                                                overwrite = overwrite)
       
       #        filename = paste(saveDir, "/simulations_", layerNames[i], "_", saveName, ".grd", sep = ""), overwrite = overwrite)
@@ -71,7 +71,7 @@ cbind.Simulations = function(
       #         overwritten = "not overwritten"
       #       }
       #       warning(paste0("The resulting raster is saved as ",
-      #                      paste0(savePath, "_", layerNames[i], ".grd"),
+      #                      paste0(nameSave, "_", layerNames[i], ".grd"),
       #                      "existing files are ", overwritten, "."))
     }
   }  

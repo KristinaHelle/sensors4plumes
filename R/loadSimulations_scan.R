@@ -2,7 +2,7 @@ loadSimulations_scan = function(
   basicPath,   
   filePaths,
   region,
-  savePath, 
+  nameSave = NA, 
   overwrite,
   nP,
   nL,
@@ -34,7 +34,7 @@ loadSimulations_scan = function(
                               xmn = -90, xmx = 90, ymn = -90, ymx = 90,
                               crs = "+init=epsg:4326")
     simulations[[i]] = writeStart(simulations[[i]],
-                                  filename = paste(savePath, "_switched_", i, ".grd", sep = ""), 
+                                  filename = paste(nameSave, "_switched_", i, ".grd", sep = ""), 
                                   overwrite = overwrite)
                                   #, dataType = dataType(data1[,1]))
   }
@@ -138,7 +138,7 @@ loadSimulations_scan = function(
   for (i in 1:nK){
     values[[i]] = t(simulations[[i]])         
 #   values[[i]] = writeRaster(values[[i]],
-#                              filename = paste(savePath, "simulations_", i, ".grd", sep = ""), 
+#                              filename = paste(nameSave, "simulations_", i, ".grd", sep = ""), 
 #                              overwrite = overwrite)
   }
   names(values) = names(simulations)
@@ -163,8 +163,8 @@ loadSimulations_scan = function(
   # remove intermediate files
   rm(simulations)
   for (i in 1:nK){
-    file.remove(paste(savePath, "_switched_", i, ".grd", sep = ""))  
-    file.remove(paste(savePath, "_switched_", i, ".gri", sep = ""))    
+    file.remove(paste(nameSave, "_switched_", i, ".grd", sep = ""))  
+    file.remove(paste(nameSave, "_switched_", i, ".gri", sep = ""))    
   }
   
   # return as list

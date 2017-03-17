@@ -9,7 +9,7 @@ loadSimulations = function(
   # the following parameters can be used if only part of the locations should be used, if the parameters are missing, the full region is used
   region, # logical, representing all locations in original data (if bBox used, it must refer to locations in bBox only); keep locations where TRUE; can be combined with bBox
   bBox, # xmin, xmax, ymin, ymax; bounding box if only part of the data should be used (works only for raster data)
-  savePath = ".", # path to directory where result shall be saved (raster needs a file to be saved, tmpfile does not work)
+  nameSave = NA, # path to directory where result shall be saved (raster needs a file to be saved, tmpfile does not work)
   overwrite = FALSE, # may output files be overwritten?
   ... # parametes to be forwarded to read.table and scan
 ){
@@ -161,7 +161,7 @@ loadSimulations = function(
       basicPath = basicPath,
       filePaths = paths4,
       region = region,
-      savePath = savePath,
+      nameSave = nameSave,
       overwrite = overwrite,
       nP = nP,
       nL = nL,
@@ -174,7 +174,7 @@ loadSimulations = function(
       filePaths = paths4,
       region = region,
       bBox = bBox,
-      savePath = savePath,
+      nameSave = nameSave,
       overwrite = overwrite,
       nP = nP,
       nL = nL,

@@ -173,16 +173,16 @@ optimiseSD_global = function(
   dimnames(detectable)[[2]] = 1:dim(detectable)[2]
   
   # find optimal detection and one design to fulfil it
-  savePath = NA
+  nameSave = NA
   if (!is.na(nameSave)){
-    savePath = paste0(nameSave, "_first") 
+    nameSave = paste0(nameSave, "_first") 
   }
   firstOptimalDesign = completeSearch(Detectable = detectable,                              # matrix of locations(rows) and plumes(columns) of 0 - plume here not detectable and 1; rows not necessarily
                                       n = aimNumber,                                        # number of sensors
                                       lowerLimit = 1,                                       # only search for sensors that detect at least so many plumes
                                       increaseLimit = TRUE,                                 # if TRUE, the lower limit is increased to the current best cost + 1 every time the current best cost >= current lowerLimit; if FALSE lowerLimit is constant
                                       iterations = maxIterations,                           # maximal number of iterations, if no value given: number of all possibilities
-                                      savePath = savePath                                   # path to save results, if it is a directory, it has to end with /
+                                      nameSave = nameSave                                   # path to save results, if it is a directory, it has to end with /
   ) 
    
   testLessSensors = FALSE
@@ -199,7 +199,7 @@ optimiseSD_global = function(
       while (i < aimNumber & allDetected){
         currentAimNumber = aimNumber - i
         if (!is.na(nameSave)){
-          savePath = paste0(nameSave, "_first_", i)  
+          nameSave = paste0(nameSave, "_first_", i)  
         }
         firstOptimalDesignsLessSensors[[i + 1]] = 
           completeSearch(Detectable = detectable,                              # matrix of locations(rows) and plumes(columns) of 0 - plume here not detectable and 1; rows not necessarily
@@ -207,7 +207,7 @@ optimiseSD_global = function(
                          lowerLimit = 1,                                       # only search for sensors that detect at least so many plumes
                          increaseLimit = TRUE,                                 # if TRUE, the lower limit is increased to the current best cost + 1 every time the current best cost >= current lowerLimit; if FALSE lowerLimit is constant
                          iterations = maxIterations,                           # maximal number of iterations, if no value given: number of all possibilities
-                         savePath = savePath                                  # path to save results, if it is a directory, it has to end with /
+                         nameSave = nameSave                                  # path to save results, if it is a directory, it has to end with /
           )          
 
         allDetected = firstOptimalDesignsLessSensors[[i + 1]]$lowerLimit > dim(detectable)[2]
@@ -228,14 +228,14 @@ optimiseSD_global = function(
   if (findAllOptima){
   # find all optimal designs  
     if (!is.na(nameSave)){
-      savePath = paste0(nameSave, "_all")
+      nameSave = paste0(nameSave, "_all")
     }  
     allOptimalDesign =  completeSearch(Detectable = detectable,                              # matrix of locations(rows) and plumes(columns) of 0 - plume here not detectable and 1; rows not necessarily
                                        n = aimNumber,                                        # number of sensors
                                        lowerLimit = firstOptimalDesign[["lowerLimit"]] - 1,                                       # only search for sensors that detect at least so many plumes
                                        increaseLimit = FALSE,                                # if TRUE, the lower limit is increased to the current best cost + 1 every time the current best cost >= current lowerLimit; if FALSE lowerLimit is constant
                                        iterations = maxIterations,                           # maximal number of iterations, if no value given: number of all possibilities
-                                       savePath = savePath                                  # path to save results, if it is a directory, it has to end with /
+                                       nameSave = nameSave                                  # path to save results, if it is a directory, it has to end with /
     )      
   }
   

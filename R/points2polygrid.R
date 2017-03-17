@@ -12,27 +12,27 @@ points2polygrid = function(
   index, # target index: integer of length = ncells in grid, values from 1:nrow(points)
   data,  # data to be assigned, each row belongs to the coordinates in the same row of points
   tolerance = signif(mean(diff(t(bbox(points))))/1000, digits = 1) # point coordinates are rounded to this dist, smaller differences are ignored
-  #tolerance = sqrt(.Machine$double.eps) 
+  #tolerance = sqrt(.Machine$double.eps)
 ){
 #  require(sp)
 # message(paste0("tolerance is ", tolerance))
   parameters = c(!missing(points), !missing(grid), !missing(index), !missing(data))
 
   # proj4string
-  # test if parameters have the correct form, else ignore 
+  # test if parameters have the correct form, else ignore
   if (all(parameters[1:2])){
     if (is(grid, "SpatialGrid") & is(points, "SpatialPoints")){
       if (proj4string(grid) != proj4string(points)){
-        warning(paste0("The projections of 'grid' and 'points' differ, the one of the points (", 
-                       proj4string(points), ") is used."))         
-      }       
-    }     
-  }    
+        warning(paste0("The projections of 'grid' and 'points' differ, the one of the points (",
+                       proj4string(points), ") is used."))
+      }
+    }
+  }
   proj4string_new = as.character(NA)
 
   if (parameters[2]){
     if (is(grid, "SpatialGrid")){
-      proj4string_new = proj4string(grid)  
+      proj4string_new = proj4string(grid)
       grid = grid@grid
     }
     if (!is(grid, "GridTopology")){
@@ -40,9 +40,9 @@ points2polygrid = function(
       parameters[2] = FALSE
     }
   }
-  
+
   if (parameters[1]){
-    if (is(points, "SpatialPoints")){       
+    if (is(points, "SpatialPoints")){
       proj4string_new = proj4string(points)
       points = coordinates(points)
     } else {
@@ -51,24 +51,24 @@ points2polygrid = function(
         parameters[1] = FALSE
       } else {
         if(dim(points)[2] < 2){
-          warning("'points' must have at least two columns, it is ignored.") 
+          warning("'points' must have at least two columns, it is ignored.")
           parameters[1] = FALSE
         } else {
           if (!is.numeric(points[[1]]) | !is.numeric(points[[2]])){
             warning("The columns of 'points' must be numeric; 'points' is ignored.")
             parameters[1] = FALSE
           } else {
-            points = points[,1:2]          
+            points = points[,1:2]
           }
-        }             
+        }
       }
     }
   }
-  
+
   if (all(parameters[2:3])){
     if(prod(grid@cells.dim) != length(index)){
       warning(paste("Number of cells in the grid (",prod(grid@cells.dim),
-                    ") does not fit length of the index (", length(index), 
+                    ") does not fit length of the index (", length(index),
                     "), 'index' is ignored."))
       parameters[3] = FALSE
     }
@@ -78,7 +78,7 @@ points2polygrid = function(
       warning("'index' has the wrong class, it must be integer; it is ignored.")
       parameters[3] = FALSE
     } else {
-      indexNeg = index <= 0 
+      indexNeg = index <= 0
       if (any(indexNeg, na.rm = TRUE)){
         warning("'index' contains negative values, they are replaced by 'NA'.")
         index[indexNeg] = NA
@@ -87,28 +87,28 @@ points2polygrid = function(
   }
 
   # decide, if parameters are sufficient and which ones to use
-  if (all(parameters[1:3] == c(FALSE, FALSE, FALSE)) | 
+  if (all(parameters[1:3] == c(FALSE, FALSE, FALSE)) |
         all(parameters[1:3] == c(FALSE, FALSE, TRUE)) |
         all(parameters[1:3] == c(FALSE, TRUE, FALSE))){
-    stop("Not enough parameters given, either 'points' or 'index' and 'grid' needed.")    
+    stop("Not enough parameters given, either 'points' or 'index' and 'grid' needed.")
   }
   if(all(parameters[1:3])){
     warning("As 'index' and 'grid' are given, 'points' is ignored.")
     parameters[1] = FALSE
   }
-  
+
   # if no grid given, determine it from points
   if(!parameters[2]){
-    
+
     # occuring coordinates
     orig_x = sort(unique(points[,1]))
     orig_y = sort(unique(points[,2]))
     x = orig_x#sort(unique(orig_x))
     y = orig_y#sort(unique(orig_y))
-    
+
     hasExtent = c(length(x) > 1, length(y) > 1)
     if (all(!hasExtent)){
-      stop("There is only one 'point', it is impossible to determine the 'grid'.")      
+      stop("There is only one 'point', it is impossible to determine the 'grid'.")
     }
     if (sum(hasExtent) == 1){
       warning("All 'points' lie on one line, grid resolution is determined from the other coordinate.")
@@ -118,7 +118,7 @@ points2polygrid = function(
     cellsize_x = NA
     cellsize_y = NA
     if (hasExtent[1]){
-      uniq_dx = diff(x)  
+      uniq_dx = diff(x)
       min_dx = min(uniq_dx)
       if(max(uniq_dx%%min(uniq_dx)) == 0){
         cellsize_x = min_dx
@@ -128,9 +128,9 @@ points2polygrid = function(
 #          message("cellsize_y from x original")
         }
       }
-    }    
+    }
     if (hasExtent[2]){
-      uniq_dy = diff(y)  
+      uniq_dy = diff(y)
       min_dy = min(uniq_dy)
       if(max(uniq_dy%%min(uniq_dy)) == 0){
         cellsize_y = min_dy
@@ -140,27 +140,27 @@ points2polygrid = function(
 #          message("cellsize_x from y original")
         }
       }
-    }   
+    }
     if (all(!is.na(c(cellsize_x, cellsize_y)))){
 #      message("regular")
     } else {# not regular
       # round to toleranceAbs
       if (hasExtent[1] & is.na(cellsize_x)){
-        x = unique(round(orig_x/tolerance) * tolerance)        
+        x = unique(round(orig_x/tolerance) * tolerance)
       }
       if (hasExtent[2] & is.na(cellsize_y)){
-        y = unique(round(orig_y/tolerance) * tolerance)        
+        y = unique(round(orig_y/tolerance) * tolerance)
       }
       hasExtent = c(length(x) > 1, length(y) > 1)
       if (sum(hasExtent) == 1){
         warning("After rounding to tolerance all 'points' lie on one line, grid resolution is determined from the other coordinate.")
-      }      
+      }
       if (all(!hasExtent)){
         stop("When rounded to tolerance there is only one 'point', it is impossible to determine the grid.")
       }
       # test for regularity after rounding
       if (hasExtent[1] & is.na(cellsize_x)){
-        uniq_dx = diff(x)  
+        uniq_dx = diff(x)
         min_dx = min(uniq_dx)
         if(max(uniq_dx%%min(uniq_dx)) == 0){
           cellsize_x = min_dx
@@ -170,9 +170,9 @@ points2polygrid = function(
 #            message("cellsize_y from rounded x")
           }
         }
-      } 
+      }
       if (hasExtent[2] & is.na(cellsize_y)){
-        uniq_dy = diff(y)  
+        uniq_dy = diff(y)
         min_dy = min(uniq_dy)
         if(max(uniq_dy%%min(uniq_dy)) == 0){
           cellsize_y = min_dy
@@ -183,14 +183,14 @@ points2polygrid = function(
           }
         }
       }
-    }  
+    }
     if (all(!is.na(c(cellsize_x, cellsize_y)))){
 #      message("regular after rounding to tolerance")
     } else {
       # determine grid resolution
       if (hasExtent[1] & is.na(cellsize_x)){
         # distances between coordinates, as multiples of 'tolerance'
-        dx = as.integer(sort(unique(round(diff(x)/tolerance)))) 
+        dx = as.integer(sort(unique(round(diff(x)/tolerance))))
         ## prime factors of distances as multiples of 'tolerance'
         primx = factorize(dx)
         # common divisor
@@ -200,7 +200,7 @@ points2polygrid = function(
           for (i in seq(along = factor_x)){
             j = 1
             while(all(dx%%factor_x[i]^j == 0)){
-              gcd_x = gcd_x * factor_x[i]       
+              gcd_x = gcd_x * factor_x[i]
               j = j + 1
             }
           }
@@ -223,11 +223,11 @@ points2polygrid = function(
           for (i in seq(along = factor_y)){
             j = 1
             while(all(dy%%factor_y[i]^j == 0)){
-              gcd_y = gcd_y * factor_y[i]        
+              gcd_y = gcd_y * factor_y[i]
               j = j + 1
             }
           }
-        }   
+        }
         cellsize_y = gcd_y * tolerance
 #        message("cellsize_y from common divisor")
         if (!hasExtent[2]){
@@ -235,28 +235,28 @@ points2polygrid = function(
 #          message("cellsize_x from common divisor of y")
         }
       }
-    }   
-    
+    }
+
     if (hasExtent[1]){
       # grid dimension (number of cells)
       xn = as.integer(round(diff(range(x))/cellsize_x + 1))
     } else {
       cellsize_x = cellsize_y
-      xn = 1      
+      xn = 1
     }
 
     if (hasExtent[2]){
       yn = as.integer(round(diff(range(y))/cellsize_y + 1))
     } else {
       cellsize_y = cellsize_x
-      yn = 1      
+      yn = 1
     }
 
     # grid
-    grid = GridTopology(c(x[1], y[1]), 
-                        c(cellsize_x, cellsize_y), c(xn, yn))    
+    grid = GridTopology(c(x[1], y[1]),
+                        c(cellsize_x, cellsize_y), c(xn, yn))
   }
-    
+
   # if no index given, determine it as nearest neighbours
   if(!parameters[3]){
   #    require(FNN)
@@ -264,7 +264,7 @@ points2polygrid = function(
     neighbours = get.knnx(points, gridPoints, k = 1, algorithm = "kd_tree")
     index = neighbours$nn.index[,1]
     if (!all(is.element(1:nrow(points), index))){
-      warning("Some of the points were merged, data$Index gives the indices of the points that were used.")       
+      warning("Some of the points were merged, data$Index gives the indices of the points that were used.")
     }
   }
 
@@ -282,31 +282,31 @@ points2polygrid = function(
       }
       index[indexTooHigh] = NA
     }
-  }              
-  
+  }
+
   # if not all possible values occur in index, adjust it, some data may be lost
   remaining_index = sort(unique(na.omit(index)))
   new_n = length(remaining_index)
   if(new_n < max(index, na.rm = TRUE)){
     new_index = rep(NA, length(index))
     for(i in 1:new_n){
-      new_index[index == remaining_index[i]] = i   
+      new_index[index == remaining_index[i]] = i
     }
     index = new_index
   }
   if (parameters[4]){
     if (new_n < nrow(data)){
       warning("Some of the 'data' is ignored as it is not associated to points/index values.")
-    }  
-    data = data[remaining_index,, drop = FALSE]     
+    }
+    data = data[remaining_index,, drop = FALSE]
   } else {
-    data = data.frame(Index = 1:new_n)  
+    data = data.frame(Index = 1:new_n)
   }
 #  } else {
 #    if (parameters[4] == TRUE){
 #      data = data
 #    } else {
-#      data = data.frame(Index = 1:max(index))                 
+#      data = data.frame(Index = 1:max(index))
 #    }
 #  }
 
@@ -319,11 +319,17 @@ points2polygrid = function(
 
 # polygrid2grid------------------------------------------------
 polygrid2grid = function(
-  obj, 
-  zcol = names(obj@data),  # ncol(obj@data)
-  returnSGDF = TRUE, 
+  obj,
+  zcol = NA,  # ncol(obj@data)
+  returnSGDF = TRUE,
   geoTiffPath
-  ){ 
+  ){
+  if (all(is.na(zcol))){
+    zcol = names(obj@data)
+  }
+  if (!is.character(zcol)){
+    zcol = names(obj@data)[zcol]
+  }
   zcol = c(zcol, "index")
   cells = SpatialGrid(obj@grid, obj@proj4string)
   fullgrid(cells) = FALSE
@@ -345,14 +351,14 @@ polygrid2grid = function(
 #    imageValueAll@data = imageValueAll@data[,zcol, drop = FALSE]
 #    out = imageValueAll
     out = imageValueAll[,,zcol]
-    
+
     if(!missing(geoTiffPath)){
       writeGDAL(dataset = imageValueAll[,,zcol], drivername = "GTiff", fname = paste(geoTiffPath, ".tif", sep = ""))
     }
   }
-    
+
   if(returnSGDF){
-    return(out)  
+    return(out)
   }else{
     return(TRUE)
   }

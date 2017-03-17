@@ -3,8 +3,8 @@ loadSimulations_raster = function(
   filePaths,
   region,
   bBox,
-  savePath,
-  overwrite,
+  nameSave = NA,
+  overwrite = FALSE,
   nP,
   nL,
   nK,
@@ -65,7 +65,7 @@ loadSimulations_raster = function(
     }   
   } 
   #  for (i in 1:nK){
-  #    writeRaster(simulations[[i]], filename = paste(savePath, "/cropped_", i, ".grd", sep = ""),
+  #    writeRaster(simulations[[i]], filename = paste(nameSave, "/cropped_", i, ".grd", sep = ""),
   #                overwrite = overwrite)
   #  }
   
@@ -84,7 +84,7 @@ loadSimulations_raster = function(
   for (i in 1:nK){
     dataType_i = dataType(simulations[[i]])
     values[[i]] = writeStart(values[[i]], 
-                             filename = paste(savePath, "_", i, ".grd", sep = ""), 
+                             filename = paste(nameSave, "_", i, ".grd", sep = ""), 
                              overwrite = overwrite,
                              dataType = dataType_i)
     k = 1

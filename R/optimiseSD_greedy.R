@@ -310,7 +310,7 @@ optimiseSD_greedy = function(
       SDsDiffer = FALSE
     }
     }   
-    print(paste("loop end, SDsDiffer: ", SDsDiffer))
+    #print(paste("loop end, SDsDiffer: ", SDsDiffer))
   } 
   else{ # add sensors because there are too few / cost is above threshold  
     #print("loop primary add")
@@ -437,7 +437,7 @@ optimiseSD_greedy = function(
     save(SDs, file = filename)  
   }
   out = list()
-  out[["SD"]] = SDs[[finalSDwhich]]
+  out[["SD"]] = SDs[[finalSDwhich[1]]]
   out[["SDs"]] =  SDs
   out[["finalSDwhich"]] = finalSDwhich
   out[["evalSDs"]] = data.frame(cost = costSDs, number = lengthSDs) 

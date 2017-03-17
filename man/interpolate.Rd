@@ -50,6 +50,8 @@ The function may produce intermediate files at \code{tmpfile} (with name extensi
 \author{ kristina.helle@uni-muenster.de  }
 
 \examples{
+\dontrun{
+## takes some time
 # get data
 data(radioactivePlumes)
 
@@ -87,4 +89,6 @@ spplotLog(OriginalAndInterpolated,
 spplot(OriginalAndInterpolated,
   sp.layout = list("sp.points", 
     samplePoints, col = 3))
+
+}
 }
