@@ -9,7 +9,8 @@ In each iteration SSA moves one or more sensors randomly within their neighbourh
 }
 \usage{
 optimiseSD_ssa(simulations, costFun,
-  locationsAll = 1:nLocations(simulations), locationsFix = integer(0), locationsInitial = integer(0),
+  locationsAll = 1:nLocations(simulations), locationsFix = integer(0), 
+  locationsInitial = integer(0),
   aimCost = NA, aimNumber = NA,
   nameSave = NA, plot = FALSE, verbatim = FALSE,
   maxShiftNumber = length(locationsInitial), startMoveProb = 0.5, 
@@ -112,7 +113,7 @@ costInitial1 = multipleDetection(simulations = radioactivePlumes,
 optSSA1 = optimiseSD(
   simulations = radioactivePlumes,
   costFun = multipleDetection,
-  locationsAll = setdiff(1:nLocations(radioactivePlumes), c(locKeep3, locAll3)),                       
+  locationsAll = setdiff(1:nLocations(radioactivePlumes), c(locKeep3, locAll3)),
   locationsFix = locKeep3,
   locationsInitial = locDel3,
   aimCost = 0.05 * costInitial1[[1]], 

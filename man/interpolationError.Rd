@@ -69,8 +69,8 @@ List of values and rasters (of same dimension as the \code{values} of the \code{
   ## plot error map
   interpolationErrorMaps = radioactivePlumes
   interpolationErrorMaps@values = stack(radioactivePlumes@values[[2]],
-                                        interpolationError_delineation[["interpolated"]],
-                                        interpolationError_delineation[["error_locationsplumes"]][[1]])
+                                  interpolationError_delineation[["interpolated"]],
+                                  interpolationError_delineation[["error_locationsplumes"]][[1]])
   interpolationErrorMapsSDF = extractSpatialDataFrame(interpolationErrorMaps, plumes = 1:5) 
   interpolationErrorMapsSDF@data$costMap = interpolationError_delineation[["costLocations"]]
   # original, interpolated, error (1: overestimation, 5: underestimation)

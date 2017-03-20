@@ -1,6 +1,12 @@
 \name{radioactivePlumes}
 
 \alias{radioactivePlumes}
+
+\alias{plumes_polygrid}
+\alias{population_polygrid}
+\alias{radioactivePlumes_area}
+\alias{radioactivePlumes_local}
+
 \docType{data}
 
 \title{
@@ -34,8 +40,14 @@ In \code{plumes} the \code{totalDose} is the area weighted sum of \code{finaldos
 
 %Also population is not taken from the same area but from an anonymous area in Europe. \cr
 }
+
+%data(radioactivePlumes)
+
 \usage{
-data(radioactivePlumes)
+data(plumes_polygrid)
+data(population_polygrid)
+data(radioactivePlumes_area)
+data(radioactivePlumes_local)
 }
 \format{
  \code{radioactivePlumes}: \code{\link{Simulations}}

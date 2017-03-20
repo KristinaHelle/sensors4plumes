@@ -59,6 +59,7 @@ singleDetection = replaceDefault(measurementsResult, newDefaults = list(
     locations = sampleLocations1) 
     
 # results
-singleDetection1[["cost"]] # global cost: fraction of nondetected plumes, weighted by their total dose
+# global cost: fraction of nondetected plumes, weighted by their total dose:
+singleDetection1[["cost"]] 
 singleDetection1[["costPlumes"]] # for each plume if it is detected (0) or not (1)
 }

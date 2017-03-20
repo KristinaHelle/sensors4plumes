@@ -75,7 +75,8 @@ The function may generate (and overwrite or delete) files in \code{savePath}.
 %}
 \examples{
 \dontrun{
-# examples for possible input is given in package sensors4plumesData in the subfolders of inst/extdata/fileFormats
+# examples for possible input is given in package sensors4plumesData in the 
+# subfolders of inst/extdata/fileFormats
 
 # from raster files
 Simulations1 = loadSimulations(
