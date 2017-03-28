@@ -10,8 +10,11 @@ This function is similar to \code{apply} for the \code{values} of \code{Simulati
 }
 \usage{
 summaryLocations(simulations, 
-  locations = 1:nLocations(simulations), plumes = 1:nPlumes(simulations), kinds = 1, 
-  fun, summaryFun = weightedMean, weight = 1, na.rm = FALSE, ...)
+  locations = 1:nLocations(simulations), 
+  plumes = 1:nPlumes(simulations), 
+  kinds = 1, 
+  fun, summaryFun = weightedMean, 
+  weight = 1, na.rm = FALSE, ...)
 }
 
 \arguments{
@@ -50,8 +53,9 @@ detection1em7 = function(x, ...){
   out = sum(xExceed)
   return(out)
 }
-plumeNr_radioactivePlumes = summaryLocations(radioactivePlumes, 
-                                             plumes = plumeSample, fun = detection1em7, kinds = 2)
+plumeNr_radioactivePlumes = 
+  summaryLocations(radioactivePlumes, 
+                   plumes = plumeSample, fun = detection1em7, kinds = 2)
 ## plot map
 plumeNrMap = radioactivePlumes@locations
 plumeNrMap@data$plumeNr = plumeNr_radioactivePlumes[["summaryLocations"]]

@@ -21,7 +21,7 @@
 
 \section{Objects from the Class}{
 Objects can be created by calls to the function \code{SpatialPolygridDataFrame}.
-They may also be created from \code{\link[sp]{SpatialGridDataFrame}} objects by calls of the form \code{y = as(x, "SpatialPolygridDataFrame")}, in this case all grid cells have individual attributes. 
+They may also be created from \code{\link[sp]{SpatialGridDataFrame}} objects by calls of the form \cr \code{y = as(x, "SpatialPolygridDataFrame")}, in this case all grid cells have individual attributes. 
 Transformation in the opposite direction can be done by \code{x = as(y, "SpatialGridDataFrame")}; it copies the attributes to all assigned grid cells.
 SpatialPolygridDataFrame objects can also be created from \code{\link[sp]{SpatialPointsDataFrame}} objects by calls of the form \code{as(x, "SpatialPolygridDataFrame")};  it generates a rectangular grid that covers all points and then assigns cells to the nearest neighbouring point -- it may fail if points are too irregular to allow for a common grid.
 }
@@ -116,7 +116,8 @@ SPolygridDF1 = SpatialPolygridDataFrame(
   proj4string = CRS("+proj=longlat +datum=WGS84"))
 
 #- - - - coerce from SpatialGridDataFrame - - - - - - - -#
-spatialGridDataFrame1 = SpatialGridDataFrame(grid = spatialGrid1, data = dataFrame1[index1,])
+spatialGridDataFrame1 = SpatialGridDataFrame(
+    grid = spatialGrid1, data = dataFrame1[index1,])
 # coerce, each cell keeps individual values
 s = as(spatialGridDataFrame1, "SpatialPolygridDataFrame")
 
@@ -127,8 +128,12 @@ spatialGridDataFrame2 = as(s, "SpatialGridDataFrame")
 #- - - - coerce from SpatialPointsDataFrame - - - - - - - #
 # from irregular points, grid is created, cells are assigned values of nearest point
 spatialPoints1 = SpatialPoints(coordinates(SPolygridDF1) + runif(24))
-spatialPointsDataFrame1 = SpatialPointsDataFrame(coords = spatialPoints1, data = dataFrame1)
+spatialPointsDataFrame1 = SpatialPointsDataFrame(
+    coords = spatialPoints1, data = dataFrame1)
+\dontrun{
+## takes some seconds
 SPolygridDF3 = as(spatialPointsDataFrame1, "SpatialPolygridDataFrame")
+
 
 # from regular points: one cell per point
 spatialPointsDataFrame2 = as(spatialGridDataFrame1, "SpatialPointsDataFrame")
@@ -147,15 +152,19 @@ proj4string(SPolygridDF3)
 # - - - - - - - - - - - - - proj4string - - - - - - - - - - - -  #
 bbox(SPolygridDF3)
 # - - - - - - - - - - - spplot - - - - - - - - - - - - - - - - #
+
+## takes some time
 # plot map with original points
-spplot(SPolygridDF3, zcol = "a", sp.layout = list(list("sp.points", spatialPoints1, col = 8)))
+spplot(SPolygridDF3, zcol = "a", 
+  sp.layout = list(list("sp.points", spatialPoints1, col = 8)))
 # plot map with centres of polygrid cells
 spplot(SPolygridDF4, zcol = "a", col.regions = rainbow(16),
   sp.layout = list("sp.points", spatialPointsDataFrame2@coords, col = 8))
 
+
 # - - - - - - - - - - - - cbind - - - - - - - - - - - - - - - - #
 #SPolygridDF5 = cbind(SPolygridDF2, SPolygridDF4) 
 SPolygridDF5 = cbind(s, SPolygridDF4) 
-
+}
 }
 \keyword{classes}

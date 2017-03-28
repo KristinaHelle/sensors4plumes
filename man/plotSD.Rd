@@ -10,7 +10,9 @@ Given a sampling design and a function to compute cost maps it generates the rel
 }
 \usage{
 plotSD(simulations, SD,
-  locationsFix = integer(0), locationsInitial = integer(0), locationsAll = integer(0),
+  locationsFix = integer(0), 
+  locationsInitial = integer(0), 
+  locationsAll = integer(0),
   costMap,
   zcol = 1, allIn1Plot = 0,
   pch = c(1, 20, 4), col = c("white", "white", "white", "white"), 
@@ -47,19 +49,14 @@ The function generates plots (main and point key missing) and returns a list of 
 \examples{
 demo(radioactivePlumes_addProperties) 
 data(SDssa)
-SDs = list(SDssa[["SD_best"]], SDssa[["SD"]])
-
+SDs = list(SDssa[["SD"]][[1]][1,], SDssa$report[["SD_final"]])
+singleDet = replaceDefault(singleDetection, 
+  newDefaults = list(plot = TRUE), type = "costFun.optimiseSD")[[1]]
 # separate maps
-plotSD1 = plotSD(
-  simulations = radioactivePlumes,
-  SD = SDs,
-  costMap = singleDetection,
-  mainCost = FALSE)
-
 plotSD1a = plotSD(
   simulations = radioactivePlumes,
   SD = SDs,
-  costMap = singleDetection)
+  costMap = singleDet)
 for (i in seq(along = SDs)){
   plot(plotSD1a[[i]])
 }
@@ -78,7 +75,7 @@ plotSD2 = plotSD(
   locationsAll = setdiff(1:nLocations(radioactivePlumes), c(locKeep3, locAll3)),
   locationsFix = locKeep3,
   locationsInitial = locDel3,
-  costMap = singleDetection,
+  costMap = singleDet,
   allIn1Plot = 2,
   col = c("green", "blue", "red", "white"),
   pch = c(1,2,4),

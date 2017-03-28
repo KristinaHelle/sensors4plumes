@@ -65,7 +65,8 @@ Objects may be created by calls to the function \code{Simulations(locations, plu
 # generate Simulations object: small, artificial example
 data(SPixelsDF)
 plumes = data.frame(source = c("A", "A", "B", "B", "B"),
-                    date = c("2000-01-01", "2000-04-01", "2000-07-01", "2000-01-01", "2000-01-03"),
+                    date = c("2000-01-01", "2000-04-01", 
+                             "2000-07-01", "2000-01-01", "2000-01-03"),
                     totalCost = runif(5, min = 5, max = 15))
 
 values1 = replicate(n = nrow(plumes), expr = rlnorm(length(SPixelsDF), sdlog = 2))

@@ -29,29 +29,29 @@ cleanIndices = function(
   } else {
     nInitial = length(locationsInitial)
   }
-  
+
   # all locations must exist
   if (!all(is.element(c(locationsAll, locationsFix, locationsInitial), locationsTotal))) {
     warning("Some of the 'locations' do not exist, they are ignored.")
-    
+
     locationsAll = intersect(locationsAll, locationsTotal)
     locationsFix = intersect(locationsFix, locationsTotal)
 
     if (multipleInitial){
       for (i in 1:dim(locationsInitial)[1]){
-        locationsInitial[i,!is.element(locationsInitial[i,], locationsTotal)] = NA 
+        locationsInitial[i,!is.element(locationsInitial[i,], locationsTotal)] = NA
       }
     } else {
       locationsInitial = intersect(locationsInitial, locationsTotal)
     }
   }
-  
+
   # locationsAll must contain all locationsInitial
   if (!all(is.element(locationsInitial, locationsAll))){
-    warning("Some of the 'locationsInitial' are not part of 'locationsAll'. The union of both sets is used as possible sensor locations (instead of 'locationsAll').")    
+    warning("Some of the 'locationsInitial' are not part of 'locationsAll'. The union of both sets is used as possible sensor locations (instead of 'locationsAll').")
     locationsAll = union(locationsAll, na.omit(as.integer(locationsInitial)))
-  }  
-  
+  }
+
   # locationsFix must not be part of either locationsInitial or locationsAll
   if (any(is.element(locationsFix, c(locationsAll)))){
     warning("'locationsFix' overlaps with 'locationsAll' or 'locationsInitial'; overlapping locations are regarded as fix.")
@@ -64,7 +64,7 @@ cleanIndices = function(
       locationsInitial = setdiff(locationsInitial, locationsFix)
     }
   }
-  
+
   # delete multiples in initial locations (for a matrix this cannot be done by 'unique')
   if (multipleInitial){
     for (i in 1:dim(locationsInitial)[1]){
@@ -83,15 +83,15 @@ cleanIndices = function(
       if (length(unique(nNAinitial)) == 1){# all rows have same number of valid entries
         new_locationsInitial = matrix(nrow = nrow(locationsInitial), ncol = nInitial - nNAinitial)
         for (i in 1:dim(locationsInitial)[1]){
-          new_locationsInitial[i,] = na.omit(locationsInitial[i,])  
+          new_locationsInitial[i,] = na.omit(locationsInitial[i,])
         }
       } else {# keep rows with most valid entries
         longestInitial = which(nNAinitial == min(nNAinitial))
         new_locationsInitial = matrix(nrow = length(longestInitial), ncol = nInitial - min(nNAinitial))
         for (i in seq(along = longestInitial)){
-          new_locationsInitial[i,] = na.omit(locationsInitial[longestInitial[i],])  
+          new_locationsInitial[i,] = na.omit(locationsInitial[longestInitial[i],])
         }
-        warning(paste0("Some 'locationsInitial' had less valid entries, they are ignored: ", 
+        warning(paste0("Some 'locationsInitial' had less valid entries, they are ignored: ",
                        length(longestInitial), " row(s) of 'locationsInitial' left."))
       }
       locationsInitial = new_locationsInitial
@@ -106,7 +106,7 @@ cleanIndices = function(
       warning(paste0("Some entries of 'locationsInitial' were invalid: ", length(locationsInitial), " entry(es) left."))
     }
   }
-  
+
   locations = list()
   locations[["locationsAll"]] = unique(setdiff(union(locationsAll, locationsInitial), locationsFix))
   locations[["locationsFix"]] = unique(locationsFix)
@@ -119,7 +119,7 @@ cleanIndices = function(
 optimiseSD = function(
   simulations,                                      # needed? yes, defines possible locations, values to be used in cost function
   costFun,
-  locationsAll = 1:nLocations(simulations),        
+  locationsAll = 1:nLocations(simulations),
   locationsFix = integer(0),
   locationsInitial = integer(0),                    # can be a list (for genetic)
   aimCost = NA,
@@ -137,42 +137,69 @@ optimiseSD = function(
     locationsAll = locationsAll,
     locationsFix = locationsFix,
     locationsInitial = locationsInitial
-  ) 
+  )
   locationsAll = locations[["locationsAll"]]
   locationsFix = locations[["locationsFix"]]
   locationsInitial = locations[["locationsInitial"]]
-  
+
+  if (!is.na(aimNumber)){
+    if (aimNumber <= length(locationsFix)){
+      stop(paste0("'aimNumber' (", aimNumber, ") must be higher than the number of fix sensors (", length(locationsFix), ")."))
+    }
+  }
+
   # -------------------- optimisation --------------------------------------- #
-  #costInitial = costFun(simulations = simulations, 
+  #costInitial = costFun(simulations = simulations,
   #                      locations = locationsInitial)
                         #plot = FALSE)
-  optimalSD = optimisationFun(simulations = simulations,        
-                                     costFun = costFun,              
-                                     locationsAll = locationsAll,       
-                                     locationsFix = locationsFix,     
-                                     locationsInitial = locationsInitial,   
+  optimalSD = optimisationFun(simulations = simulations,
+                                     costFun = costFun,
+                                     locationsAll = locationsAll,
+                                     locationsFix = locationsFix,
+                                     locationsInitial = locationsInitial,
                                      aimCost = aimCost,
-                                     aimNumber = aimNumber,                  
+                                     aimNumber = aimNumber,
                                      nameSave = nameSave,
                                      verbatim = verbatim)
-  return(optimalSD)
-} 
+
+  # determine which SD is wanted by aimCost or aimNumber
+  aim = list()
+  if (!is.na(aimNumber)){
+    aim[["SDaimNumber"]] = which(optimalSD$evaluation$number == aimNumber)
+  }
+  if (!is.na(aimCost)){
+    whichBelow = which(optimalSD$evaluation$cost <= aimCost)
+    if (length(whichBelow) > 1){
+      aim[["SDaimCost"]] = min(whichBelow)
+    } else {
+      aim[["SDaimCost"]] = whichBelow
+    }
+  }
+  optSD = list(
+    SD = optimalSD[["SD"]],
+    evaluation = optimalSD[["evaluation"]],
+    aimSD = aim,
+    report = optimalSD[["report"]]
+  )
+
+  return(optSD)
+}
   # = do.call(what = optimisationFun, args = as.list(formals(optimisationFun)))
 
-  
+
 #   optimalSD = optimisationFun(
 #     simulations = simulations,                     # simulations object to optimise sensors for; forwarded to 'costFun', 'locations...' must be subset of locations else they are ignored
-#     costFun = costFun,                         # function to compute cost 
+#     costFun = costFun,                         # function to compute cost
 #     locationsAll = locationsAll,                    # all possible sensor locations (as indices of simulations@locations)
 #     locationsFix = locationsFix,                    # these sensors are always included to determine cost, they cannot be deleted
 #     locationsInitial = locationsInitial,                # current sensors that can be deleted
 #     aimCost = aimCost,
-#     aimNumber = aimNumber,                  
+#     aimNumber = aimNumber,
 #     nameSave = nameSave                       # without suffix .Rdata
-#     #  plot = FALSE, 
+#     #  plot = FALSE,
 #   )
-  
-  
+
+
   #costI = costInitial[[1]]
   #whichAim = c(!missing(aimNumber), !missing(aimCost)) # CHANGE
 #   switch(algorithm,
@@ -188,11 +215,11 @@ optimiseSD = function(
 #         verbatim = verbatim,
 #         pathSave = pathSave,
 #         nameSave = nameSave
-#         )     
-#     }, 
+#         )
+#     },
 #     "greedy" = {
-#       # determine if optimisation aims at a maximal number of sensors or at a cost limit    
-# 
+#       # determine if optimisation aims at a maximal number of sensors or at a cost limit
+#
 #       # run greedy optimisation
 #       optimalSD = optimiseSD_greedy (
 #         simulations = simulations,
@@ -205,17 +232,17 @@ optimiseSD = function(
 #         nameSave = nameSave #paste0(pathSave, "/", nameSave)
 #         #plot = plot
 #       )
-#       
+#
 #       # check secondary aim if required
 #       if (identical(whichAim, c(TRUE, TRUE))){
 #         if(optimalSD[["evalSDs"]]$cost[optimalSD[["finalSDwhich"]][1]] <= aimCost){# CHANGE
-#          message("The desired cost was achieved as well.") 
+#          message("The desired cost was achieved as well.")
 #         }else{
 #           message(paste("The desired cost was not achieved, cost of optimal SD is ", optimalSD[["evalSDs"]]$cost[optimalSD[["finalSDwhich"]][1]], sep = ""))
 #         }
-#       }    
+#       }
 #     },
-#     "genetic" = {     
+#     "genetic" = {
 #       require(genalg)
 #       cost0sensors = costFun(simulations, locations = integer(0))
 #       # chromosome must contain only the locations that can be changed, not fix, not forbidden
@@ -242,7 +269,7 @@ optimiseSD = function(
 #         out = plotSD(
 #           simulations = simulations,
 #           costFun = costFun,
-#           type = "genetic", 
+#           type = "genetic",
 #           SD = locationsOld,
 #           plot = plot,
 #           param = list(
@@ -251,35 +278,35 @@ optimiseSD = function(
 #             locationsAll = locationsAll,
 #             rbgaResults = rbgaResults
 #           )
-#         )  
+#         )
 #       }
 #         if (missing(aimNumber)){
 #           aimNumber = length(unique(c(locationsInitial, locationsFix)))
 #         }
 #         nAll = length(locationsAll)
 #         nFix = length(locationsFix)
-#         rbgaResults = rbga.bin(size = nAll, 
+#         rbgaResults = rbga.bin(size = nAll,
 #                                 suggestions = suggestions,
 #                                 evalFunc = evalFunc,
 #                                 zeroToOneRatio = nAll/(aimNumber - nFix),
 #                                 monitorFunc = monitorFunc,
 #                                 verbose = verbatim)
-#         
-#       optimalSD = SDrbga(simulations = simulations, 
+#
+#       optimalSD = SDrbga(simulations = simulations,
 #                 locationsFix = locationsFix,
 #                 locationsAll = locationsAll,
-#                 rbgaResults = rbgaResults, 
+#                 rbgaResults = rbgaResults,
 #                 costFun = costFun)
 #       optimalSD[["report"]] = rbgaResults
 #       # aimNumber: penalty, if too much
 #       # aimCost: stop if reached
-#    },     
+#    },
 #     "global" = {
 #       # detectable = simulatios@values must be in memory
 #       # and consist of 0 and  1 only
-#       
+#
 #       completeSearch(Detectable = detectable,                              # matrix of locations(rows) and plumes(columns) of 0 - plume here not detectable and 1; rows not necessarily
 #                               n = length(locationsInitial))
-#                    
-#     }     
+#
+#     }
 #   )

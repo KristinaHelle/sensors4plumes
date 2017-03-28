@@ -8,11 +8,11 @@ interpolationError = function(
   simulations,
   locations,
   kinds,
-  fun_interpolation,
-  fun_error,
-  fun_Rpl = NULL,
+  fun_interpolation = NA,
+  fun_error = NA,
+  fun_Rpl = NA,
   fun_Rpl_cellStats = "mean",
-  fun_l = NULL,
+  fun_l = NA,
   tmpfile = "tmp_interpolationError",
   overwrite = FALSE,
   chunksize = 1e+7
@@ -23,7 +23,7 @@ interpolationError = function(
   
   # check functions (except those that are tested inside further functions)
   useRpl = FALSE
-  if (!is.null(fun_Rpl)){
+  if (!is.na(fun_Rpl)){
     RplTested = replaceDefault(fun_Rpl, type = "fun.simulationsApply")
     bs_fun_pl = blockSize(simulationsSubset@values, 
                           n = formals(fun_error)[["nout"]], 
@@ -36,7 +36,7 @@ interpolationError = function(
     }
   }
   useL = FALSE
-  if (!is.null(fun_l)){
+  if (!is.na(fun_l)){
     lTested = replaceDefault(fun_l, type = "fun.simulationsApply")
     if (!lTested[["accept"]]) {
       warning("'fun_l' invalid, no result returned.")

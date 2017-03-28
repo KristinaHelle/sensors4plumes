@@ -23,7 +23,7 @@ similaritySD(simulations, SD, referenceSD, type = "equal", k = 9, ...)
 Originally Earth Mover's Distance compares matrices of two distributions. We can use it for cases where all locations lie on a regular grid. Then a sampling design is represented by a matrix of all grid cells: each sensor is represented by 1, all other cells are 0 (for locations on a \code{SpatialPolygrid}, a sensor may belong to several cells, then the weight 1 is distributed evenly to all these cells).
 }
 \value{
-A vector of length refering to the number of sampling designs in \code{SD} with the similarity between these sampling designs and \code{referendeSD} respectively.
+A vector of length referring to the number of sampling designs in \code{SD} with the similarity between these sampling designs and \code{referenceSD} respectively.
 }
 \author{ Kristina B. Helle, \email{kristina.helle@uni-muenster.de} }
 

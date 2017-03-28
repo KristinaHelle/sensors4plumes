@@ -10,7 +10,8 @@ Plot overview of \code{simulations}.
 Generate a common plot for the values associated with \code{locations} and with \code{plumes} and the \code{values}. 
 }
 \usage{
-\method{plot}{Simulations}(x, ..., zcol = 1, main = "", col = terrain.colors(100), maxpixels = 1e+7)
+\method{plot}{Simulations}(x, ..., zcol = 1, main = "", 
+                          col = terrain.colors(100), maxpixels = 1e+7)
 }
 
 \arguments{
@@ -26,10 +27,11 @@ The plots show all factorial and numeric parameters, character parameters (e.g. 
 If \code{values} (of one layer) fit into memory, they are plotted by \code{\link[graphics]{image}}. If they are bigger, we use \code{\link[raster]{plot}} and only plot a sample of size \code{maxpixels} (with warning).
 }
 
-\author{ kristina.helle@uni-muenster.de  }
+\author{ Kristina B. Helle, \email{kristina.helle@uni-muenster.de} }
 
 \examples{
 data(radioactivePlumes)
-plot(radioactivePlumes, zcol = 3, main = "radioactive \n plumes \n area", col = bpy.colors())
+plot(radioactivePlumes, zcol = 3, col = bpy.colors(), 
+     main = "radioactive \n plumes \n area")
 }
 

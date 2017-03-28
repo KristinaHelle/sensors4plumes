@@ -13,19 +13,24 @@ replaceDefault(fun, newDefaults = list(), type)
   \item{newDefaults}{
  \code{\link{list}} of new default values: elements must be named, names have to be those of parameters of \code{fun} (not necessarily all of them); then default values of \code{fun} are replaced; elements without or with other names cause a warning. }
   \item{type}{
-  character string indicating the purpose of the resulting function, e.g. to be used as \code{summaryFun} in \code{summaryPlumes}; these function calls require certain parameters: it is checked if the \code{fun} has them and if all additional parameters have default values (after replacing defaults), and generates warnings, if not. Possible values: \code{c("costFun", "rbga.bin", "summaryFun.summaryPlumes", "fun.simulationsApply", "funR.simulationsApply")}}
+  character string indicating the purpose of the resulting function, e.g. to be used as \code{summaryFun} in \code{summaryPlumes}; these function calls require certain parameters: it is checked if the \code{fun} has them and if all additional parameters have default values (after replacing defaults), and generates warnings, if not. For possible values, see details.}
 }
 
 \details{
 Dependent on the \code{type}, a list of required parameters is generated and compared to the parameters of \code{fun}: all required parameters must exist and all other parameters need to have default values (in the resulting function, when defaults of \code{newDefaults} have been inserted)
 
-"costFun" (\code{costFun} in \code{optimiseSD}): "simulations", "locations" \cr
-"rbga.bin"(\code{rgba.bin} in ??): "size", "suggestions", "popSize", "iters", "mutationChance", "elitism", "zeroToOneRatio", "monitorFunc", "evalFunc", "showSettings", "verbose" \cr
 "summaryFun.summaryPlumes" (\code{summaryFun} in \code{summaryPlumes}): "x", "weight" \cr
-"fun.simulationsApply" (\code{fun}, \code{fun_l}, \code{fun_p}, \code{fun_pl}, or \code{fun_Rpl} in \code{simulationsApply}): "x", "nout" \cr
+"fun.simulationsApply" (\code{fun}, \code{fun_l}, \code{fun_p}, \code{fun_pl} in \code{simulationsApply}): "x", "nout" \cr
 "funR.simulationsApply" (\code{fun_Rp} or \code{fun_Rl} in \code{simulationsApply}): "x", "nout", "weight" \cr
+"funRR.simulationsApply" (\code{fun_Rpl} in \code{simulationsApply}): "x", "nout", "weight_l", "weight_p" \cr
 "fun_interpolation.interpolate" (\code{fun_interpolation} in \code{interpolate}): "data", "newdata", "y" \cr
-"fun_interpolationSplit.interpolate" (\code{fun_interpolation} in \code{interpolate} with extra parameters for regional interpolation): "data", "newdata", "y", "dataLoc", "newdataLoc" \cr
+%"fun_interpolationSplit.interpolate" (\code{fun_interpolation} in \code{interpolate} with extra parameters for regional interpolation): "data", "newdata", "y", "dataLoc", "newdataLoc" \cr
+"fun.spatialSpread" (\code{fun} in \code{spatialSpread}): "allLocations", "locations"\cr
+"fun_R.spatialSpread" (\code{fun_R} in \code{spatialSpread}): "x" \cr
+"costFun" (\code{costFun} in \code{optimiseSD}): "simulations", "locations" \cr
+"optimisationFun.optimiseSD" (\code{optimisationFun} in \code{optimiseSD}): "simulations", "costFun", "locationsAll", "locationsFix", "locationsInitial", "aimcost", "aimNumber", "nameSave" \cr
+"evalFunc.rbga.bin"(\code{evalFunc} in \code{rbga.bin}): "chromosome"
+%"rbga.bin" (?) "size", "suggestions", "popSize", "iters", "mutationChance", "elitism", "zeroToOneRatio", "monitorFunc", "evalFunc", "showSettings", "verbose"
 
 For \code{"fun.simulationsApply"} and \code{"funR.simulationsApply"} the parameter "nout" must exist and have   default value.
 

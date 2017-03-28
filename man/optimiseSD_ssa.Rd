@@ -4,55 +4,57 @@
 Spatial Simulated Annealing optimisation algorithm
 }
 \description{
-Runs Spatial Simulated Annealing (SSA) optimisation for a given Simulations object and cost function. The aim is a cost value. The algorithm moves the initial sensors to reach the aim. 
+Runs Spatial Simulated Annealing (SSA) optimisation for a given Simulations object and cost function. The aim is a cost value. The algorithm moves the initial sensors to reach the aim.
 In each iteration SSA moves one or more sensors randomly within their neighbourhood; the size of shifts decreases during the run. If a movement decreases cost, it is accepted. Else it may be accepted, too: the decision is random, with higher probability for acceptance in the beginning of the run and if the move increases cost only little. Acceptance of worse results helps to escape from local optima
 }
 \usage{
 optimiseSD_ssa(simulations, costFun,
-  locationsAll = 1:nLocations(simulations), locationsFix = integer(0), 
+  locationsAll = 1:nLocations(simulations), locationsFix = integer(0),
   locationsInitial = integer(0),
   aimCost = NA, aimNumber = NA,
   nameSave = NA, plot = FALSE, verbatim = FALSE,
-  maxShiftNumber = length(locationsInitial), startMoveProb = 0.5, 
+  maxShiftNumber = length(locationsInitial), startMoveProb = 0.5,
   maxShiftFactor = 0.2, minShiftFactor = 0.01,
-  maxIterations = 5000, maxStableIterations = 500, 
-  maxIterationsJumpBack = maxStableIterations - 1, 
-  acceptanceMethod = "vanGroenigen", 
-  start_acc_vG = 0.5, end_acc_vG = 0.0001, cooling_vG = 0.999, startAcceptance_vG = 0.5, 
+  maxIterations = 5000, maxStableIterations = 500,
+  maxIterationsJumpBack = maxStableIterations - 1,
+  acceptanceMethod = "vanGroenigen",
+  start_acc_vG = 0.5, end_acc_vG = 0.0001, 
+  cooling_vG = 0.999, startAcceptance_vG = 0.5,
   start_acc_iI = 0.2
   )
 }
 
 \arguments{
-  \item{simulations}{ \code{\link{Simulations} object}}
-  \item{costFun}{cost function, must have parameters \code{simulations} and \code{locations} (may be prepared by \code{replaceDefault} with \code{type = "costFun.optimiseSD"}); it must return cost as a single value or a list where this is the first entry}
-  \item{locationsAll}{indices of the \code{locations} that are considered possible sensor locations}
-  \item{locationsFix}{indices of \code{locations} with fix sensors -- to be considered when computing cost}
-  \item{locationsInitial}{indices of \code{locations} where sensors are initially}
-  \item{aimCost}{limit value of the \code{costFun}: the result has to fall below}
-  \item{aimNumber}{if no \code{locationsInitial} given, it starts from this number of random locations}
-  \item{nameSave}{\code{character} path and name (without suffix!) where to save intermediate results (sampling design of each iteration)}
-  \item{plot}{if iteration is plotted (currently disabled)}
-  \item{verbatim}{print intermediate results and keep sampling desings and cost of all iterations}
+Some arguments are the same for all optimisation algorithms, they are marked by a \code{*}, for detail see \code{\link{optimiseSD}}. Others are directly forwarded to \code{\link[genalg]{rbga.bin}}, they are marked by \code{**}
+  \item{simulations}{\code{*}}
+  \item{costFun}{\code{*}}
+  \item{locationsAll}{\code{*}}
+  \item{locationsFix}{\code{*}}
+  \item{locationsInitial}{\code{*}}
+  \item{aimCost}{\code{*}}
+  \item{aimNumber}{\code{*}; if no \code{locationsInitial} given, it starts from this number of random locations}
+  \item{nameSave}{\code{*}}
+  \item{plot}{not yet implemented}
+  \item{verbatim}{if more output is to be written to the console}
   \item{maxShiftNumber}{how many of the sensors can maximally be shifted in each iteration}
   \item{startMoveProb}{initial probability to move sensors -in any case at least one sensor is moved}
   \item{maxShiftFactor}{initial maximal size of shifts (as fraction of extent)}
   \item{minShiftFactor}{final maximal size of shifts (as fraction of extent)}
   \item{maxIterations}{maximal number of iterations (iteration means tried sensor changes, not all are accepted)}
   \item{maxStableIterations}{it stops after this number of iterations in a row without improvement}
-  \item{maxIterationsJumpBack}{if for this number of iterations the best result is not improved, the sampling design jumpes back to the last best design; by default this does not occur}
+  \item{maxIterationsJumpBack}{if for this number of iterations the best result is not improved, the sampling design jumps back to the last best design; by default this does not occur}
   \item{acceptanceMethod}{formula to compute probability to accept worse result: for \code{"vanGroenigen"} acceptance decreases relative to worsening, for \code{"intamapInteractive"} it does not; for both probability of acceptance decreases during the run}
-  \item{start_acc_vG}{acceptance worse results in first iteration (for \code{acceptanceMethod = "vanGroenigen"})}
-  \item{end_acc_vG}{acceptance of worse results in maxIterations-th iteration (for \code{acceptanceMethod = "vanGroenigen"})}
-  \item{cooling_vG}{cooling parameter (for \code{acceptanceMethod = "vanGroenigen"}), see details}
-  \item{startAcceptance_vG}{second cooling parameter (for \code{acceptanceMethod = "vanGroenigen"}), see details}
-  \item{start_acc_iI}{calibration factor of acceptance for \code{acceptanceMethod = "intamapInteractive"} (equals \code{start_p} in \code{ssaOptim} in package \code{intamapInteractive}), see details}
+  \item{start_acc_vG}{acceptance worse results in first iteration \cr (for \code{acceptanceMethod = "vanGroenigen"})}
+  \item{end_acc_vG}{acceptance of worse results in maxIterations-th iteration \cr(for \code{acceptanceMethod = "vanGroenigen"})}
+  \item{cooling_vG}{cooling parameter \cr (for \code{acceptanceMethod = "vanGroenigen"}), see details}
+  \item{startAcceptance_vG}{second cooling parameter \cr(for \code{acceptanceMethod = "van Groenigen"}), see details}
+  \item{start_acc_iI}{calibration factor of acceptance for \cr \code{acceptanceMethod = "intamapInteractive"} (equals \code{start_p} in \code{ssaOptim} in package \code{intamapInteractive}), see details}
 }
 
 \details{
 In general the function is used within the wrapper \code{\link{optimiseSD}}. The following parameters are specific to \code{optimiseSD_ssa}: maxShiftNumber, startMoveProb, maxShiftFactor, minShiftFactor, maxIterations, maxStableIterations, maxIterationsJumpBack, acceptanceMethod, start_acc_vG, end_acc_vG, cooling_vG, startAcceptance_vG, start_acc_iI. They may be changed beforehand via \code{\link{replaceDefault}} with \code{type = "optimisationFun.optimiseSD"}; all other parameters are forwarded from \code{optimiseSD}.
 
-In one iteration more than one sensor may be moved: first \code{maxShiftNumber} sensors are selected; for each of them, probability to move it is \eqn{startMoveProb * (1 - k / maxIterations)} where \eqn{k} indicates the iteration; only the first is moved in any case. The decision if the movement is accepted refers to the common movement of all finally selected sensors. Moving many sensors allows for big changes, it can be useful if initial sensors are suposed to be far from the optimum.
+In one iteration more than one sensor may be moved: first \code{maxShiftNumber} sensors are selected; for each of them, probability to move it is \eqn{startMoveProb * (1 - k / maxIterations)} where \eqn{k} indicates the iteration; only the first is moved in any case. The decision if the movement is accepted refers to the common movement of all finally selected sensors. Moving many sensors allows for big changes, it can be useful if initial sensors are supposed to be far from the optimum.
 
 \code{maxShiftFactor} and \code{minShiftFactor} are given as fractions of the extent. If the underlying spatial object of the \code{simulations} is gridded, a shift size below cellsize would not allow any shifts. Therefore in this case it is set to at least cell size (independently in both coordinates).
 
@@ -62,14 +64,18 @@ For \code{acceptanceMethod = "intamapInteractive"} acceptance of worse results i
 }
 \value{
 A list
-\item{SD}{final sampling desing}
-\item{SD_best}{best sampling design ever found}
-\item{cost}{cost of \code{SD}}
-\item{cost_best}{cost of \code{SD_best}}
-\item{report}{\code{data.frame} with columns \code{cost} and \code{accepted}, rows refer to iterations.}
+A list, the first two entries are common to all optimisation algorithms, they are marked with \code{*}, see \code{\link{optimiseSD}} for details.
+\item{SD}{\code{*} best sampling designs}
+\item{evaluation}{\code{*} cost and size of \code{SD}}
+\item{report}{ a list of \cr
+\code{SD_final}: final sampling design (not necessarily best, including \code{locationsFix}) \cr
+\code{SD_best}: best sampling design ever found (including \code{locationsFix}), same as \code{SD[[1]]} \cr
+\code{cost_final}: cost of \code{SD_final} \cr
+\code{cost_best}: cost of \code{SD_best} \cr
+\code{iterations}: \code{data.frame} with columns \code{cost} and \code{accepted}, rows refer to iterations. \cr \cr
 
-If \code{verbatim = TRUE} more information is returned:
-The \code{report} has additional columns: \code{costTest} (cost of the design tested in this iteration, no matter if it was accepted; \code{cost} refers to the currently accepted design); \code{costBest} (best cost until then); \code{chi} (random value that was used for the acceptance decision).
+If \code{verbatim = TRUE} more information is returned in \code{report}: \cr
+The \code{iterations} has additional columns: \code{costTest} (cost of the design tested in this iteration, no matter if it was accepted; \code{cost} refers to the currently accepted design); \code{costBest} (best cost until then); \code{chi} (random value that was used for the acceptance decision).
 
 In addition it returns a matrix each for \code{SDs}, \code{SDs_test}, \code{SDs_test} with the current, tested and best known sampling designs of all iterations.
 
@@ -77,21 +83,22 @@ If \code{acceptanceMethod = "vanGroenigen"} it returns the cooling parameters \c
 
 It gives the iterations with \code{jumpBack} i.e. when the current sampling design was replaced by the known best.
 }
-\author{ kristina.helle@uni-muenster.de  }
+}
+\author{ Kristina B. Helle, \email{kristina.helle@uni-muenster.de} }
 
 \examples{
 # the function is to be used inside of optimiseSD
-# change parameters 
+# change parameters
 optimSD_ssa1 = replaceDefault(
   optimiseSD_ssa,  newDefaults = list(
     start_acc_vG = 0.1,
-    aimCost = 0, 
+    aimCost = 0,
     verbatim = TRUE,
     maxIterations = 3000,
     maxStableIterations = 500,
-    maxIterationsJumpBack = 200   
+    maxIterationsJumpBack = 200
   ),
-  type = "optimisationFun.optimiseSD")[[1]] 
+  type = "optimisationFun.optimiseSD")[[1]]
 
 # load data
 demo(radioactivePlumes_addProperties)
@@ -100,44 +107,41 @@ I = nLocations(radioactivePlumes)
 set.seed(22347287)
 locDel3 = sample.int(I, 5)
 locKeep3 = sample(setdiff(1:I, locDel3), 10)
-locAll3 = c(sample(setdiff(1:I, 
+locAll3 = c(sample(setdiff(1:I,
   c(locDel3, locKeep3)), 10), locDel3)
 
- 
-costInitial1 = multipleDetection(simulations = radioactivePlumes, 
+
+costInitial1 = multipleDetection(simulations = radioactivePlumes,
   locations = c(locKeep3, locDel3))
 
 # run optimisation
 \dontrun{
 ## takes some time
-optSSA1 = optimiseSD(
+SDssa = optimiseSD(
   simulations = radioactivePlumes,
   costFun = multipleDetection,
   locationsAll = setdiff(1:nLocations(radioactivePlumes), c(locKeep3, locAll3)),
   locationsFix = locKeep3,
   locationsInitial = locDel3,
-  aimCost = 0.05 * costInitial1[[1]], 
-  aimNumber = length(locDel3),
+  aimCost = 0.05 * costInitial1[[1]],
+  aimNumber = length(locDel3) + length(locKeep3),
   optimisationFun = optimSD_ssa1
-)  
+)
 }
 ## this result is also in data(SDssa)
 
-# visualise 
+# visualise
 data(SDssa)
-SDssa$report = SDssa$report[-nrow(SDssa$report),]
 ## cost curve
-plot(SDssa$report$cost, pch = ".", col = SDssa$report$accepted + 2)
+optimisationCurve(optSD = SDssa, type = "ssa")
 ## designs
-allSDs = subsetSDF(radioactivePlumes@locations,
-  locations = c(locKeep3, locDel3, SDssa$SD[1:5], unique(as.integer(SDssa$SDs_test))))
-AllSDs = as(allSDs, "SpatialPointsDataFrame")  
-radioactivePlumes@locations@data$nDetectable = 
-  summaryLocations(radioactivePlumes, fun = sum, kinds = "detectable")[[2]] 
-spplot(radioactivePlumes@locations, zcol = "nDetectable",
-  sp.layout = list("sp.points", AllSDs, 
-  pch = c(rep(4, length(locKeep3)), 
-          rep(1, length(locDel3)), 
-          rep(20, 5), rep(46, 1450)), 
-  col = "green"))
+singleDet = replaceDefault(singleDetection, 
+  newDefaults = list(plot = TRUE), type = "costFun.optimiseSD")[[1]]
+plotSD(radioactivePlumes, 
+  SD = SDssa[[1]],
+  locationsFix = locKeep3, 
+  locationsInitial = locDel3, 
+  locationsAll = setdiff(1:nLocations(radioactivePlumes), c(locKeep3, locAll3)),
+  costMap = singleDet
+)
 }

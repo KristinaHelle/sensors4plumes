@@ -9,7 +9,8 @@ Copy Simulations (including raster files)
 Copy or move the raster files associated with a \code{\link{Simulations}} object to another directory and update the paths in the \code{Simulations}. The resulting \code{Simulations} may be saved.
 }
 \usage{
-copySimulations(simulations, newPath, newFile, overwrite = FALSE, deleteOld = FALSE)
+copySimulations(simulations, newPath, newFile, 
+  overwrite = FALSE, deleteOld = FALSE)
 }
 
 \arguments{
@@ -17,7 +18,7 @@ copySimulations(simulations, newPath, newFile, overwrite = FALSE, deleteOld = FA
   }
   \item{newPath}{path to the directory where to save the files; if it is missing, the raster files are not copied
   }
-  \item{newFile}{filename where to save the resulting \code{simulations}; if missing, the \code{simulations} are not saved and just returnded; the file is saved in the directory \code{newPath} if given and else in the current directory    
+  \item{newFile}{filename where to save the resulting \code{simulations}; if missing, the \code{simulations} are not saved and just returned; the file is saved in the directory \code{newPath} if given and else in the current directory    
   }
   \item{overwrite}{\code{logical} if files may be overwritten when copying the raster files -- has no influence on saving of the \code{simulations} themselves as .Rdata file}
   \item{deleteOld}{\code{logical} if the old \code{raster} files are to be deleted (move files to new directory instead of copy)}
@@ -35,6 +36,7 @@ library(sensors4plumesData)
 data(radioactivePlumes_area)
 radioactivePlumes_area2 = 
   copySimulations(radioactivePlumes_area, 
-  newPath = paste0(path.package("sensors4plumesData"), newFile = "radioactivePlumes_area2")
+  newPath = paste0(path.package("sensors4plumesData"), 
+  newFile = "radioactivePlumes_area2")
 }
 }

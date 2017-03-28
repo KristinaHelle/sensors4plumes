@@ -22,7 +22,7 @@ idw0z(formula = z ~ 1, data, newdata, y, idp = 2)
   \item{locations}{indices of \code{locations} to be used as input; multiple and invalid values are ignored}
   \item{plumes}{indices of \code{plumes} to fit variograms to}
   \item{kinds}{ layer of the \code{values} of \code{simulations} to be used; interpolation can only be applied to one layer: if \code{values} is a vector, only the first entry is used in both functions. }
-  \item{fun_interpolation}{ interpolation \code{function}, must have the parameters \code{y}, \code{data}, \code{newdata} (form as for \code{\link[gstat]{krige0}}). All other parameters need default values, e.g. the \code{model} of \code{krige0} that can be set by \code{replaceDefault} with \code{type = "interpolation_fun.interpolate"}. 
+  \item{fun_interpolation}{ interpolation \code{function}, must have the parameters \code{y}, \code{data}, \code{newdata} (form as for \code{\link[gstat]{krige0}}). All other parameters need default values, e.g. the \code{model} of \code{krige0} that can be set by \code{replaceDefault} with \cr \code{type = "interpolation_fun.interpolate"}. 
   
   %It may also have the two additional parameters \code{dataLoc} and \code{newdataLoc} (like \code{\link{interpol0reg}}) which can by modified in \code{\link{replaceDefault}} with \code{type = "fun_interpolationSplit.interpolate"}.
   }
@@ -47,7 +47,7 @@ The function may produce intermediate files at \code{tmpfile} (with name extensi
 %\references{
 %% ~put references to the literature/web site here ~
 %}
-\author{ kristina.helle@uni-muenster.de  }
+\author{ Kristina B. Helle, \email{kristina.helle@uni-muenster.de} }
 
 \examples{
 \dontrun{
@@ -56,9 +56,15 @@ The function may produce intermediate files at \code{tmpfile} (with name extensi
 data(radioactivePlumes)
 
 # generate median variogram from plumes
+\dontrun{
+## takes some seconds
 medianVariogram = fitMedianVariogram(simulations = radioactivePlumes, 
                               plumes = 1:nPlumes(radioactivePlumes),
                               kinds = 1)
+}
+## the result is in:
+data(medianVariogram)
+
 # prepare interpolation function 
 krige0var = replaceDefault(krige0, newDefaults = list(
   formula = z ~ 1, model = medianVariogram, beta = NA, ... = NA),
@@ -82,7 +88,8 @@ originalAndInterpolated@values = stack(
 OriginalAndInterpolated = extractSpatialDataFrame(
   originalAndInterpolated, plumes = 1:4)
 
-samplePoints = as(OriginalAndInterpolated, "SpatialPointsDataFrame")[sampleLocations,]
+samplePoints = 
+  as(OriginalAndInterpolated, "SpatialPointsDataFrame")[sampleLocations,]
 spplotLog(OriginalAndInterpolated,
   sp.layout = list("sp.points", 
     samplePoints, col = 3))

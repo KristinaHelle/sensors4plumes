@@ -28,6 +28,7 @@ The key refers to the original values although in the background log transformed
 \value{
 A plot.
 }
+\author{ Kristina B. Helle, \email{kristina.helle@uni-muenster.de} }
 
 \examples{
 data(SPixelsDF)

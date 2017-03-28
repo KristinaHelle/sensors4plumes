@@ -12,7 +12,9 @@ It is combined with a global summary function and thus provides a general basic 
 }
 \usage{
 summaryPlumes(simulations,
-  locations = 1:nLocations(simulations), plumes = 1:nPlumes(simulations), kinds = 1, 
+  locations = 1:nLocations(simulations), 
+  plumes = 1:nPlumes(simulations), 
+  kinds = 1, 
   fun, summaryFun = weightedMean,
   weight = 1, na.rm = FALSE, ...)
 weightedMean(x, weight, na.rm = FALSE)
@@ -34,7 +36,7 @@ weightedMean(x, weight, na.rm = FALSE)
 }
 
 \details{
-To use a different \code{summaryFun} you may use \code{replaceDefault} with \code{kind = "summaryFun.summaryPlumes"} to check the function beforehand or to generate it by resetting the default parameters of an existing function.
+To use a different \code{summaryFun} you may use \code{replaceDefault} with \cr \code{kind = "summaryFun.summaryPlumes"} to check the function beforehand or to generate it by resetting the default parameters of an existing function.
 }
 
 \value{

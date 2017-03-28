@@ -2,10 +2,10 @@
 
 \alias{radioactivePlumes}
 
-\alias{plumes_polygrid}
-\alias{population_polygrid}
-\alias{radioactivePlumes_area}
-\alias{radioactivePlumes_local}
+%\alias{plumes_polygrid}
+%\alias{population_polygrid}
+%\alias{radioactivePlumes_area}
+%\alias{radioactivePlumes_local}
 
 \docType{data}
 
@@ -44,10 +44,7 @@ In \code{plumes} the \code{totalDose} is the area weighted sum of \code{finaldos
 %data(radioactivePlumes)
 
 \usage{
-data(plumes_polygrid)
-data(population_polygrid)
-data(radioactivePlumes_area)
-data(radioactivePlumes_local)
+data(radioactivePlumes)
 }
 \format{
  \code{radioactivePlumes}: \code{\link{Simulations}}
@@ -56,12 +53,13 @@ data(radioactivePlumes_local)
 \references{
 K.B. Helle, T.O. M{\"u}ller, P. Astrup, J.E. Dyve (2014). Automatic Optimisation of Gamma Dose Rate Sensor Networks: The DETECT Optimisation Tool. Computers \& Geosciences (66), 158-167.
 }
-
+\author{ Kristina B. Helle, \email{kristina.helle@uni-muenster.de} }
 
 \examples{
 data(radioactivePlumes)
 plot(radioactivePlumes, zcol = 2)
-spplotLog(extractSpatialDataFrame(radioactivePlumes, plumes = 1)) # first plume, all kinds of values
+# plot first plume, all kinds of values
+spplotLog(extractSpatialDataFrame(radioactivePlumes, plumes = 1)) 
 demo(radioactivePlumes_addProperties)
 plot(radioactivePlumes, zcol = 2)
 spplot(radioactivePlumes@locations)

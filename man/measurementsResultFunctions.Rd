@@ -18,13 +18,14 @@ fraction of possible additional detections: given a plume can be detected in 10 
 }
 
 \usage{
-singleDetection(simulations, locations)
-multipleDetection(simulations, locations)
-earlyDetection(simulations, locations)  
+singleDetection(simulations, locations, plot = FALSE)
+multipleDetection(simulations, locations, plot = FALSE)
+earlyDetection(simulations, locations, plot = FALSE)  
 }
 \arguments{
   \item{simulations}{\code{Simulations} object, must contain the required data, see details.}
   \item{locations}{indices of \code{locations}, sensor positions}% multiple, invalid, order?
+  \item{plot}{if a map is generated (takes time), only implemented yet for \code{singleDetection}, else it is automatically set to \code{FALSE}}
 }
 %\details{
 %For these cost functions assume that for a set of plumes \eqn{p \in P} the dose rate \eqn{r_p(x,t)} is known for all locations of interest \eqn{x \in X} and time steps \eqn{t \in T}. A plume is detected when \eqn{r_p(x,t) \geq r_{threshold}} for a threshold dose rate \eqn{r_{threshold}}. For the first two functions we only take into account if plumes are detected (exceed a threshold \eqn{r_{threshold}}) at all, no matter when: 
@@ -77,7 +78,7 @@ earlyDetection(simulations, locations)
   \code{"costPlumes"}: plume-wise intermediate result, not to be interpreted as plume-specific cost
 }
 
-\author{ kristina.helle@uni-muenster.de  }
+\author{ Kristina B. Helle, \email{kristina.helle@uni-muenster.de} }
 
 \examples{
 # load data

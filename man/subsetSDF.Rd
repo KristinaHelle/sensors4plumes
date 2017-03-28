@@ -35,7 +35,6 @@ This is a wrapper function for the subsetting methods in all subclasses of \code
 }
 
 \author{ Kristina B. Helle, \email{kristina.helle@uni-muenster.de} }
-%\seealso{ \link{}}
 
 \examples{
 data(SIndexDF)

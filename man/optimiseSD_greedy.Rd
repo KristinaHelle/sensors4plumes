@@ -8,41 +8,44 @@ Runs greedy optimisation for a given Simulations object and cost function. The a
 The algorithm may take into account fix sensors and start from a given initial sensor set.
 }
 \usage{
-optimiseSD_greedy(simulations, costFun,  
-  locationsAll = 1:nLocations(simulations), locationsFix = integer(0), 
-  locationsInitial = integer(0), 
+optimiseSD_greedy(simulations, costFun,
+  locationsAll = 1:nLocations(simulations), locationsFix = integer(0),
+  locationsInitial = integer(0),
   aimCost = NA, aimNumber = NA,
   nameSave = NA, plot = FALSE, verbatim = FALSE,
   maxIterations = 100, swap = FALSE)
 }
 
 \arguments{
-  \item{simulations}{ \code{\link{Simulations} object}}
-  \item{costFun}{cost function, must have parameters \code{simulations} and \code{locations} (may be prepared by \code{replaceDefault} with \code{type = "costFun.optimiseSD"}); it must return cost as a single value or a list where this is the first entry}
-  \item{locationsAll}{indices of the \code{locations} that are considered possible sensor locations}
-  \item{locationsFix}{indices of \code{locations} with fix sensors -- to be considered when computing cost}
-  \item{locationsInitial}{indices of \code{locations} where sensors are initially}
-  \item{aimCost}{limit value of the \code{costFun}: the result has to fall below}
-  \item{aimNumber}{desired number of sensors; the result has to have no more sensors (\code{locationsFix} do not count)}
-    \item{nameSave}{\code{character} path and name (without suffix!) where to save intermediate results (sampling design of each iteration)}
-  \item{plot}{not implemented yet}  
+Some arguments are the same for all optimisation algorithms, they are marked by a \code{*}, for detail see \code{\link{optimiseSD}}
+  \item{simulations}{\code{*}}
+  \item{costFun}{\code{*}}
+  \item{locationsAll}{\code{*}}
+  \item{locationsFix}{\code{*}}
+  \item{locationsInitial}{\code{*}}
+  \item{aimCost}{\code{*}, ignored}
+  \item{aimNumber}{\code{*}}
+  \item{nameSave}{\code{*}}
+  \item{plot}{not implemented yet}
   \item{verbatim}{\code{logical}, not implemented yet}
   \item{maxIterations}{maximal number of iterations, then it stops}
   \item{swap}{\code{logical} if algorithm continues, when greedy optimum is found, by adding and deleting sensors in turns}
 }
 
 \details{
-In general the function is used within the wrapper \code{\link{optimiseSD}}. The parameters \code{maxIterations} and \code{swap} are specific to \code{optimiseSD_greedy}, they may be changed beforehand via \code{\link{replaceDefault}} with \code{type = "optimisationFun.optimiseSD"}; all other parameters are forwarded from \code{optimiseSD}. 
+In general the function is used within the wrapper \code{\link{optimiseSD}}. The parameters \code{maxIterations} and \code{swap} are specific to \code{optimiseSD_greedy}, they may be changed beforehand via \code{\link{replaceDefault}} with \code{type = "optimisationFun.optimiseSD"}; all other parameters are forwarded from \code{optimiseSD}.
 
 If \code{aimCost} and \code{aimNumber} are given, \code{aimNumber} is ignored with a warning.
 }
 \value{
-A list
-\item{SDs}{a list of the sampling designs of all iterations}
-\item{finalSDwhich}{one or more integers indicating the iteration of the best sampling design(s): they fulfill the given aim and have minimal number of sensors/minimal cost. If the aim cannot be reached (\code{maxIterations} reached; all possible sensors added and still too few or too high cost; all but fix sensors deleted but still too many / too low cost) it may be empty; if cost too low or too few sensors the sampling design with highest cost/most sensors is returned.}
-\item{evalSDs}{\code{data.frame}: \code{cost} and \code{number} of sensors for the sampling design of each iteration.}
+A list, the first two entries are common to all optimisation algorithms, they are marked with \code{*}, see \code{\link{optimiseSD}} for details.
+\item{SD}{\code{*} best sampling designs}
+\item{evaluation}{\code{*} cost and size of \code{SD}}
+\item{report}{ a list of \cr
+\code{SDs}a list of the sampling designs of all iterations \cr
+\code{evalSDs} a \code{data.frame}: \code{cost} and \code{number} of sensors for the sampling designs \code{SDs}.}
 }
-\author{ kristina.helle@uni-muenster.de  }
+\author{ Kristina B. Helle, \email{kristina.helle@uni-muenster.de} }
 
 \examples{
 # optimisation function: is to be used inside of optimiseSD
@@ -60,7 +63,7 @@ minDist = replaceDefault(
     fun = minimalDistance,
     fun_R = meanFun
   ), type = "costFun.optimiseSD"
-)[["fun"]] 
+)[["fun"]]
 
 # define possible, fix, and initial sensors
 data(SimulationsSmall)
@@ -71,14 +74,18 @@ locKeep1 = sample(setdiff(1:I, locInit1), 2)
 locAll1 = c(sample(setdiff(1:I, c(locInit1, locKeep1)), 4), locInit1)
 
 # run optimisation
+\dontrun{
+## takes some time
 optSD_greedy = optimiseSD(
   simulations = SimulationsSmall,
-  costFun = minDist,    
+  costFun = minDist,
   optimisationFun = optGr_20_true[[1]],
-  locationsAll = locAll1,                    
-  locationsFix = locKeep1,                   
-  locationsInitial = locInit1,                
-  aimNumber = 7                
+  locationsAll = locAll1,
+  locationsFix = locKeep1,
+  locationsInitial = locInit1,
+  aimNumber = 7
 )
+
+}
 ## this result is also in data(SDgreedy)
 }

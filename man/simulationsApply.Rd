@@ -8,8 +8,10 @@ Apply functions to the \code{@values} of Simulations objects or to Raster* objec
 }
 \usage{
 simulationsApply(simulations, 
-  locations = 1:nLocations(simulations), plumes = 1:nPlumes(simulations), 
-  kinds = 1:nKinds(simulations), fun = NA, fun_p = NA, fun_l = NA, fun_pl = NA, 
+  locations = 1:nLocations(simulations), 
+  plumes = 1:nPlumes(simulations), 
+  kinds = 1:nKinds(simulations), 
+  fun = NA, fun_p = NA, fun_l = NA, fun_pl = NA, 
   fun_Rp = NA, fun_Rl = NA, fun_Rpl = NA, fun_Rpl_cellStats = NA, 
   nameSave = "simulationsApply", overwrite = FALSE,
   chunksize = 1e+7, keepSubset = FALSE, ...)
@@ -68,12 +70,15 @@ The results of \code{fun_pl} may be too big to keep in memory. If \code{nameSave
 The subset of values (defined by \code{plumes} and \code{locations}) is only kept if it fits into memory.
 }
 
-\author{ kristina.helle@uni-muenster.de  }
+\author{ Kristina B. Helle, \email{kristina.helle@uni-muenster.de} }
 
 \examples{
+\dontrun{
+## may create files
 demo(radioactivePlumes_addProperties)
 
-# number of not detected plumes for given set of 10 sensors, weighted by total dose of plumes
+# number of not detected plumes for given set of 10 sensors, 
+# weighted by total dose of plumes
 sensors = sample.int(nLocations(radioactivePlumes), 10)
   
 nondetection = function(x, threshold = 1e-7, nout = 1){ 
@@ -125,6 +130,8 @@ hist(valuesRatio[["result_locationsplumes"]], 1,
   xlim = c(0,1), breaks = c(seq(0, 1, 0.01), 10000))
 hist(valuesRatio[["result_locationsplumes"]], 2, 
   xlim = c(-0.001, 0.001), breaks = c(-1000, seq(-0.001, 0.001, 0.0001), 1000))
+
+}
 
 %# linear model
 %# early detection

@@ -15,8 +15,7 @@ data(SimulationsSmall)
 \format{
  \code{SimulationsSmall}: \code{\link{Simulations}}           
 }
-
-
+\author{ Kristina B. Helle, \email{kristina.helle@uni-muenster.de} }
 
 \examples{
 data(SimulationsSmall)

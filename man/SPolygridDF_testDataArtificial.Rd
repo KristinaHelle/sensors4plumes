@@ -31,7 +31,7 @@ data(SLinesDF)
  \code{SPolygonsDF}: \code{\link[sp]{SpatialPolygonsDataFrame}} \cr 
  \code{SLinesDF}: \code{\link[sp]{SpatialLinesDataFrame}}       \cr
 }
-
+\author{ Kristina B. Helle, \email{kristina.helle@uni-muenster.de} }
 
 \examples{
 data(SPolygridDF)

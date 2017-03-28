@@ -38,7 +38,7 @@ replaceDefault = function(fun, newDefaults = list(), type){
                         "funR.simulationsApply" = c("x", "nout", "weight"),
                         "funRR.simulationsApply" = c("x", "nout", "weight_l", "weight_p"),
                         "fun_interpolation.interpolate" = c("data", "newdata", "y"),
-                        "fun_interpolationSplit.interpolate" = c("data", "newdata", "y", "dataLoc", "newdataLoc"),
+                        #"fun_interpolationSplit.interpolate" = c("data", "newdata", "y", "dataLoc", "newdataLoc"),
                         "fun.spatialSpread" = c("allLocations", "locations"),
                         "fun_R.spatialSpread" = c("x"),
                         "costFun.optimiseSD" = c("simulations", "locations"),
@@ -49,8 +49,7 @@ replaceDefault = function(fun, newDefaults = list(), type){
                             "aimCost", "aimNumber", "nameSave"
                           ),
                         "evalFunc.rbga.bin" = c("chromosome"),
-                        "rbga.bin" = c("size", "suggestions", "popSize", "iters", "mutationChance", "elitism", 
-                                       "zeroToOneRatio", "monitorFunc", "evalFunc", "showSettings", "verbose"),
+                        #"rbga.bin" = c("size", "suggestions", "popSize", "iters", "mutationChance", "elitism", "zeroToOneRatio", "monitorFunc", "evalFunc", "showSettings", "verbose"),
                         character(0)
       )        
       requiredDefault = setdiff(parameters, required) # all not-required parameters need default values

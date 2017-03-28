@@ -8,7 +8,7 @@
 Coerces \code{\link{SpatialPolygridDataFrame}} into \code{\link{SpatialGridDataFrame}} by copying the data to all associated grid cells. It may write the result to a geoTiff file.
 }
 \usage{
-polygrid2grid(obj, zcol = names(obj@data), returnSGDF = TRUE, geoTiffPath)
+polygrid2grid(obj, zcol = NA, returnSGDF = TRUE, geoTiffPath)
 }
 \arguments{
   \item{obj}{\code{SpatialPolygridDataFrame-class}
@@ -35,7 +35,8 @@ data(SPolygridDF)
 SGridDF1 = polygrid2grid(SPolygridDF, zcol = "b")
 
 # generate geoTiff 
-polygrid2grid(SPolygridDF, returnSGDF = FALSE, geoTiffPath = "SPolygridDF1")
+polygrid2grid(SPolygridDF, returnSGDF = FALSE, 
+              geoTiffPath = "SPolygridDF1")
 
 # plot SpatialGridDataFrame
 spplot(SGridDF1)

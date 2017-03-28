@@ -35,11 +35,11 @@ loadSimulations(basicPath = ".", readBy = NA,
   }
   \item{bBox}{bounding box of locations to keep, given as vector \code{c(xmin, xmax, ymin, ymax)}; works only for raster data, for text files it is ignored
   }
-  \item{savePath}{path to save resulting raster files that are created automatically and then contain the final data, may be a directory or a directory followed a name like \code{"/myDir/theseSimulations"} as files are created by appending names to it, starting with \code{"_"}
+  \item{nameSave}{name to save resulting raster files that are created automatically and then contain the final data, files are created by appending names to it, starting with \code{"_"}
   }
-  \item{overwrite}{logical if files in \code{savePath} may be overwritten
+  \item{overwrite}{logical if files at \code{nameSave} may be overwritten
   }
-  \item{...}{parametes to be forwarded to read.table and scan like \code{skip}, \code{sep}, \code{dec}}
+  \item{...}{parameters to be forwarded to read.table and scan like \code{skip}, \code{sep}, \code{dec}}
 }
 
 \details{
@@ -58,7 +58,7 @@ If there are several kinds of maps, either all kinds for a plume are in the same
 \value{
 The output of this function depends on the file type: raster files result in a \code{Simulations} object, with spatial properties kept in the \code{locations} (projection etc. of GeoTiff); text files do not contain spatial information, therefore a \code{list} of \code{plumes} and \code{values} is returned that can be used to generate a \code{Simulations} object together with appropriate \code{locations}.
 
-The function may generate (and overwrite or delete) files in \code{savePath}.
+The function may generate (and overwrite or delete) files at \code{nameSave}.
 }
 %\references{
 %% ~put references to the literature/web site here ~
@@ -80,16 +80,18 @@ The function may generate (and overwrite or delete) files in \code{savePath}.
 
 # from raster files
 Simulations1 = loadSimulations(
-  basicPath = paste0(path.package("sensors4plumesData"),"/extdata/fileFormats/raster"),
-  savePath = "t1_",
+  basicPath = paste0(path.package("sensors4plumesData"),
+                     "/extdata/fileFormats/raster"),
+  nameSave = "t1_",
   overwrite = TRUE
 )
 
 # from text files
 Simulations2 = loadSimulations(
-  basicPath = paste0(path.package("sensors4plumesData"),"/extdata/fileFormats/text_multicolumn"),
+  basicPath = paste0(path.package("sensors4plumesData"),
+                     "/extdata/fileFormats/text_multicolumn"),
   readBy = "scan",  
-  savePath = "t2_",
+  nameSave = "t2_",
   overwrite = TRUE,
   skip = 1
 )
@@ -99,8 +101,9 @@ region = as.logical(replicate(20, sample.int(2,1)) - 1)
 bBox = c(0.2, 0.7, 0.4, 0.8)
 
 Simulations3 = loadSimulations(
-  basicPath = paste0(path.package("sensors4plumesData"),"/extdata/fileFormats/raster_multilayer"),
-  savePath = "t3_",
+  basicPath = paste0(path.package("sensors4plumesData"),
+                     "/extdata/fileFormats/raster_multilayer"),
+  nameSave = "t3_",
   region = region,
   bBox = bBox,
   overwrite = TRUE

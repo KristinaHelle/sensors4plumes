@@ -7,11 +7,11 @@
 Generates algorithm-specific plots of optimisation or optimal sampling design(s).
 }
 \usage{
-optimisationCurve(report, type, nameSave, ...)
+optimisationCurve(optSD, type, nameSave, ...)
 }
 \arguments{
-  \item{report}{ \code{report} from a result of \code{optimiseSD}, algorithm-specific format}
-  \item{type}{character, indicating type of report, of \code{"ssa", "genetic", "greedy", "global", "manual"}}
+  \item{optSD}{result of \code{optimiseSD}}
+  \item{type}{character, indicating type of \code{optimisationFun} used, of \code{"ssa"}, \code{"genetic"}, \code{"greedy"}, \code{"global"}, \code{"manual"}}
   \item{nameSave}{path of file where to save, without suffix, generates a .png file}
   \item{...}{parameters to be forwarded to \code{\link[grDevices]{png}}}
 }
@@ -36,41 +36,37 @@ Generates a plot or a file with it, no value returned.
 \examples{
 data(SDgreedy)
 curve_greedy1 = optimisationCurve(
-  report = SDgreedy,
+  optSD = SDgreedy,
   type = "greedy")
 
 data(SDgenetic)
 curve_genetic1 = optimisationCurve(
-  report = SDgenetic$report,
+  optSD = SDgenetic,
   type = "genetic")
 
 data(SDglobal)
 curve_global1 = optimisationCurve(
-  report = SDglobal,
+  optSD = SDglobal,
   type = "global")
   
 data(SDmanual)  
 curve_manual1 = optimisationCurve(
-  report = SDmanual,
+  optSD = SDmanual,
   type = "manual")
 
-\dontshow{
-\dontrun{
-# error
+
 data(SDssa)
 curve_ssa1 = optimisationCurve(
-  report = SDssa$report,
+  optSD = SDssa,
   type = "ssa")
-}
-}
+
   
 \dontrun{
-# generate a file
+# generates a file
 curve_global1 = optimisationCurve(
-  report = SDglobal,
+  optSD = SDglobal,
   type = "global",
   nameSave = "optSD_global",
   width = 600, height = 300)
 }  
-
 }

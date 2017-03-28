@@ -30,14 +30,14 @@ delineationErrorMap(x, nout = 1, threshold = 1e-7, weightFalseNeg = 5)
 \value{
 \code{absError} returns a single numeric value, the absolute difference. 
 
-\code{delineationError} computes first computes if the original is above the threshold and if the interpolated is above the threshold; then it determines the result: 0 if classifications agree, 1 for false positive (i.e. original is below threshold, interpolated is above), and \code{weightFalseNeg} for false negative.
+\code{delineationError} first computes if the original is above the threshold and if the interpolated is above the threshold; then it determines the result: 0 if classifications agree, 1 for false positive (i.e. original is below threshold, interpolated is above), and \code{weightFalseNeg} for false negative.
 %returns three values: if the original is above the threshold; if the interpolated is above the threshold; the result: 0 if classifications agree, 1 for false positive (i.e. original is below threshold, interpolated is above), and \code{weightFalseNeg} for false negative.
 
 \code{absErrorMap} and \code{delineationErrorMap} return single values.
 }
 %\references{
 %}
-\author{ kristina.helle@uni-muenster.de  }
+\author{ Kristina B. Helle, \email{kristina.helle@uni-muenster.de} }
 
 \examples{
 ## see interpolationError

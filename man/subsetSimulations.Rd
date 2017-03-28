@@ -11,7 +11,7 @@ Return subsets of \code{\link{Simulations}}, subsetting by \code{plumes}, \code{
 }
 \usage{
 \method{subset}{Simulations}(x, ..., locations, plumes, kinds, dataLocations, dataPlumes, 
-  saveName, saveDir = ".", overwrite = FALSE, valuesOnly = FALSE)
+  nameSave = NA, overwrite = FALSE, valuesOnly = FALSE)
 }
 
 \arguments{
@@ -22,8 +22,7 @@ Return subsets of \code{\link{Simulations}}, subsetting by \code{plumes}, \code{
   \item{kinds}{indices of kinds of \code{values} to keep}
   \item{dataLocations}{indices of the data associated with the \code{locations} to keep}
   \item{dataPlumes}{indices of the data associated with the \code{plumes} to keep}  
-  \item{saveName}{name for saving the new \code{raster} files for the \code{values} if they cannot be kept in memory (without suffix)}
-  \item{saveDir}{directory for saving if necessary}
+  \item{nameSave}{name for saving the new \code{raster} files for the \code{values} if they cannot be kept in memory (without suffix)}
   \item{overwrite}{\code{logical} if files may be overwritten by the raster files}
   \item{valuesOnly}{\code{logical} if only the subset of \code{values} is returned (if \code{FALSE} the result is the full new \code{Simulations})}
 }
@@ -43,6 +42,8 @@ If \code{valuesOnly = TRUE}, only the new \code{values} are returned, i.e. a \co
 \author{ Kristina B. Helle, \email{kristina.helle@uni-muenster.de} }
 
 \examples{
+\dontrun{
+## may create files
 data(SimulationsSmall)
 
 SimulationsSmall_a = subset(SimulationsSmall, locations = c(2,4,6,8))
@@ -64,4 +65,5 @@ subset_mf_RNA_vO = subset(radioactivePlumes,
                           valuesOnly = TRUE)  
 image(subset_fm_RNA@values) 
 image(subset_mf_RNA_vO)   # with repetitions
+}
 }

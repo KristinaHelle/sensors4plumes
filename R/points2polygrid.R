@@ -338,7 +338,13 @@ polygrid2grid = function(
   cells$index = obj@index
   imageValue = obj@data
   imageValue$index = seq(along = imageValue[[1]])
+  # NA in index seems to cause cells to be deleted, replace by -1 (did not change the warning)
+#  cells$index[is.na(cells$index)] = -1
+#  imageValue = rbind(imageValue, imageValue[1,])
+#  imageValue[nrow(imageValue),] = NA
+#  imageValue[nrow(imageValue), "index"] = -1
   imageValueAll = merge(x = cells, y = imageValue, by = "index", all = TRUE, sort = FALSE)
+#  imageValueAll$index[imageValueAll$index == -1] = NA
 #  imageValueAll$index = NULL # changed!
   coordinates(imageValueAll) = 2:3 #~ x + y # (x,y does not work if imageValue has columns of this name)
   proj4string(imageValueAll) = obj@proj4string

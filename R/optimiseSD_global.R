@@ -3,14 +3,14 @@
 # if findAllOptima = TRUE: all SDs of given length with maximal detection are returned OR all SDs that can detect all plumes (if they have less sensors)
 
 optimiseSD_global = function(
-  simulations, 
-  costFun = NA, 
-  locationsAll = 1:nLocations(simulations), 
-  locationsFix = integer(0), 
+  simulations,
+  costFun = NA,
+  locationsAll = 1:nLocations(simulations),
+  locationsFix = integer(0),
   locationsInitial = integer(0),
-  aimCost = NA, 
+  aimCost = NA,
   aimNumber = NA,
-  nameSave = NA, 
+  nameSave = NA,
   plot = FALSE,
   verbatim = FALSE,
   detectable = 1,          # layer of simulations@values with detectability
@@ -24,27 +24,34 @@ optimiseSD_global = function(
     locationsAll = locationsAll,
     locationsFix = locationsFix,
     locationsInitial = locationsInitial
-  ) 
+  )
   locationsAll = locations[["locationsAll"]]
   locationsFix = locations[["locationsFix"]]
   locationsInitial = locations[["locationsInitial"]]
-  
+
+  if (!is.na(aimNumber)){
+    if (aimNumber <= length(locationsFix)){
+      stop(paste0("'aimNumber' (", aimNumber, ") must be higher than the number of fix sensors (", length(locationsFix), ")."))
+    }
+  }
+
   if (is.na(aimNumber)){
-    aimNumber = length(locationsInitial)      
-  } 
-  if (aimNumber <= 0) {
+    aimNumber = length(locationsInitial) + length(locationsFix)
+  }
+  if (aimNumber <= length(locationsFix)) {
     stop("'aimNumber' (> 0) needed or 'locationsInitial' to use their length as 'aimNumber'.")
   }
-  
+  aimNumberNF = aimNumber - length(locationsFix)
+
   # -------- prepare 'detectable' values ---------- #
   # extract layer of interest
   if (!is.na(nameSave)){
-    detectableSim = subset(x = simulations, 
+    detectableSim = subset(x = simulations,
                            kinds = detectable,
-                           saveName = paste0(nameSave, "_detectableSim"))    
+                           nameSave = paste0(nameSave, "_detectableSim"))
   } else {
-    detectableSim = subset(x = simulations, 
-                           kindss = detectable)
+    detectableSim = subset(x = simulations,
+                           kinds = detectable)
   }
 
   # check, if layer is logical or consists of 0 and 1 only
@@ -60,7 +67,7 @@ optimiseSD_global = function(
           is01 = TRUE
         } else {# numbers except 0 1 -> FALSE
           is01 = FALSE
-        }        
+        }
       }
       return(is01)
     }
@@ -76,7 +83,7 @@ optimiseSD_global = function(
   if (!is_01){
     stop("Global search cannot be applied as the given layer of simulations values is not logical or consisting of 0 and 1.")
   }
-  
+
   # if locationsFix given, delete all these locations and all plumes detected there
   detectedByFix = rep(0, nPlumes(simulations))
   if (length(locationsFix) > 0){
@@ -92,12 +99,12 @@ optimiseSD_global = function(
                                     locations = locationsFix,
                                     values = detectable,
                                     fun = max)[[2]]
-    #}   
+    #}
     nDetectedFix = sum(detectedByFix)
     if (nDetectedFix > 0){
       paste0(nDetectedFix, "plume(s) are detected at 'locationsFix' and is/are ignored.")
     }
-  } 
+  }
   detectedByAll = rep(1, nPlumes(simulations))
   if (length(locationsAll) < nLocations(simulations)){
     # which plumes cannot be detected at locationsAll?
@@ -129,18 +136,18 @@ optimiseSD_global = function(
       keepPlumes = which(detectedByFix == 0 & detectedByAll == 1)
       detectableFinal = subset(x = detectableSim,
                                plumes = keepPlumes,
-                               locations = locationsAll)      
+                               locations = locationsAll)
     #}
   #} else {
   #  detectableFinal = subset(x = detectableSim,
   #                           locations = locationsAll)
   #}
-  
+
   # can data be processed in memory
   if (!canProcessInMemory(detectableFinal@values, n = 2)){ # which n is realistic (how many copies needed in theory?)
     stop("Global search cannot be applied as values of simulations are too big to be loaded into memory.")
   }
-  
+
   # extract values into matrix
   #if (dataType(detectableSim@values) == "LOG1S"){
   #  detectable_ = rep(0, prod(dim(detectableFinal@values)))
@@ -154,7 +161,7 @@ optimiseSD_global = function(
 
   # --------------- optimise ----------------- #
   # if detectable has 0 or 1 columns/rows
-  
+
   if (dim(detectable)[1] == 1){
     if (dim(detectable)[2] == 1){
       result = list()
@@ -165,26 +172,28 @@ optimiseSD_global = function(
       result[["detectable"]] = detectable
       warning(paste0())
     } else {
-      # setting dimnames only works, if first the dimension with extent of more than 1 is set       
-      dimnames(detectable)[[2]] = 1:dim(detectable)[2] 
+      # setting dimnames only works, if first the dimension with extent of more than 1 is set
+      dimnames(detectable)[[2]] = 1:dim(detectable)[2]
     }
   }
   dimnames(detectable)[[1]] = 1:dim(detectable)[1]
   dimnames(detectable)[[2]] = 1:dim(detectable)[2]
-  
+
   # find optimal detection and one design to fulfil it
-  nameSave = NA
+  #nameSave = NA
   if (!is.na(nameSave)){
-    nameSave = paste0(nameSave, "_first") 
+    nameSaveF = paste0(nameSave, "_first")
+  } else {
+    nameSaveF = NA
   }
   firstOptimalDesign = completeSearch(Detectable = detectable,                              # matrix of locations(rows) and plumes(columns) of 0 - plume here not detectable and 1; rows not necessarily
-                                      n = aimNumber,                                        # number of sensors
+                                      n = aimNumberNF,                                        # number of sensors
                                       lowerLimit = 1,                                       # only search for sensors that detect at least so many plumes
                                       increaseLimit = TRUE,                                 # if TRUE, the lower limit is increased to the current best cost + 1 every time the current best cost >= current lowerLimit; if FALSE lowerLimit is constant
                                       iterations = maxIterations,                           # maximal number of iterations, if no value given: number of all possibilities
-                                      nameSave = nameSave                                   # path to save results, if it is a directory, it has to end with /
-  ) 
-   
+                                      nameSave = nameSaveF                                   # path to save results, if it is a directory, it has to end with /
+  )
+
   testLessSensors = FALSE
   if (firstOptimalDesign$lowerLimit > dim(detectable)[2]){ # "first" can detect all plumes -> check if even less sensors can do that
     if (findAllOptima){# to find all optima, their length must be known beforehand
@@ -196,49 +205,53 @@ optimiseSD_global = function(
       firstOptimalDesignsLessSensors[[1]] = firstOptimalDesign
       i = 1
       allDetected = TRUE
-      while (i < aimNumber & allDetected){
-        currentAimNumber = aimNumber - i
+      while (i < aimNumberNF & allDetected){
+        currentAimNumber = aimNumberNF - i
         if (!is.na(nameSave)){
-          nameSave = paste0(nameSave, "_first_", i)  
+          nameSaveFi = paste0(nameSave, "_first_", i)
+        } else {
+          nameSaveFi = NA
         }
-        firstOptimalDesignsLessSensors[[i + 1]] = 
+        firstOptimalDesignsLessSensors[[i + 1]] =
           completeSearch(Detectable = detectable,                              # matrix of locations(rows) and plumes(columns) of 0 - plume here not detectable and 1; rows not necessarily
                          n = currentAimNumber,                                  # number of sensors
                          lowerLimit = 1,                                       # only search for sensors that detect at least so many plumes
                          increaseLimit = TRUE,                                 # if TRUE, the lower limit is increased to the current best cost + 1 every time the current best cost >= current lowerLimit; if FALSE lowerLimit is constant
                          iterations = maxIterations,                           # maximal number of iterations, if no value given: number of all possibilities
-                         nameSave = nameSave                                  # path to save results, if it is a directory, it has to end with /
-          )          
+                         nameSave = nameSaveFi                                  # path to save results, if it is a directory, it has to end with /
+          )
 
         allDetected = firstOptimalDesignsLessSensors[[i + 1]]$lowerLimit > dim(detectable)[2]
         i = i + 1
       }
-      if (aimNumber == 1){ # then, no further 'firstOptimalDesignsLessSensors' are generated
+      if (aimNumberNF == 1){ # then, no further 'firstOptimalDesignsLessSensors' are generated
         currentAimNumber = 1
       }
       # go back to last currentAimNumber when all plumes are detected
       detectionsByLessSensors = sapply(X = firstOptimalDesignsLessSensors, FUN = "[[", "lowerLimit")
-      minAimNumberAllDetected = min((aimNumber:currentAimNumber)[detectionsByLessSensors > dim(detectable)[2]])
-      
+      minAimNumberAllDetected = min((aimNumberNF:currentAimNumber)[detectionsByLessSensors > dim(detectable)[2]])
+
      warning(paste0(minAimNumberAllDetected, " sensors are sufficient to detect all plumes. Therefore optimal designs of this size are returned."))
-     aimNumber = minAimNumberAllDetected
+     aimNumberNF = minAimNumberAllDetected
      firstOptimalDesign = firstOptimalDesignsLessSensors[[max(which(detectionsByLessSensors > dim(detectable)[2]))]]
     }
   }
   if (findAllOptima){
-  # find all optimal designs  
+  # find all optimal designs
     if (!is.na(nameSave)){
-      nameSave = paste0(nameSave, "_all")
-    }  
+      nameSaveA = paste0(nameSave, "_all")
+    } else {
+      nameSaveA = NA
+    }
     allOptimalDesign =  completeSearch(Detectable = detectable,                              # matrix of locations(rows) and plumes(columns) of 0 - plume here not detectable and 1; rows not necessarily
-                                       n = aimNumber,                                        # number of sensors
+                                       n = aimNumberNF,                                        # number of sensors
                                        lowerLimit = firstOptimalDesign[["lowerLimit"]] - 1,                                       # only search for sensors that detect at least so many plumes
                                        increaseLimit = FALSE,                                # if TRUE, the lower limit is increased to the current best cost + 1 every time the current best cost >= current lowerLimit; if FALSE lowerLimit is constant
                                        iterations = maxIterations,                           # maximal number of iterations, if no value given: number of all possibilities
-                                       nameSave = nameSave                                  # path to save results, if it is a directory, it has to end with /
-    )      
+                                       nameSave = nameSaveA                                  # path to save results, if it is a directory, it has to end with /
+    )
   }
-  
+
   # ------------- reconstruct optimal designs ignored by merging ------------ #
   if (!findAllOptima){# find one optimum (equal SDs from merging are not reconstructed)
     SD = as.integer(firstOptimalDesign$finalSD[nrow(firstOptimalDesign$finalSD),])
@@ -248,22 +261,22 @@ optimiseSD_global = function(
   } else {
     # find all optima (reconstruct all equal SDs)
     # reconstruct sensors that detect the same remaining plumes
-    SDsensors = list() 
+    SDsensors = list()
     for(k in 1:nrow(allOptimalDesign$finalSD)){
       SDsensors[[k]] = list()
-      for(l in 1:aimNumber){  
+      for(l in 1:aimNumberNF){
         if(l == 1){
-          alreadyDetected = rep(FALSE, dim(detectable)[2])          
+          alreadyDetected = rep(FALSE, dim(detectable)[2])
         }else{
-          alreadyDetected = apply(X = detectable[as.integer(allOptimalDesign$finalSD[k,1:(l-1)]),,drop = FALSE], # changed: insterted "as.integer" 
-                                  MARGIN = 2, FUN = any) 
+          alreadyDetected = apply(X = detectable[as.integer(allOptimalDesign$finalSD[k,1:(l-1)]),,drop = FALSE], # changed: insterted "as.integer"
+                                  MARGIN = 2, FUN = any)
         }
         currentDetectable = detectable[,!alreadyDetected,drop = FALSE]
-        hereDetected = currentDetectable[as.integer(allOptimalDesign$finalSD[k,l]),,drop = FALSE] # changed: insterted "as.integer" 
+        hereDetected = currentDetectable[as.integer(allOptimalDesign$finalSD[k,l]),,drop = FALSE] # changed: insterted "as.integer"
         whichSame = which(
           apply(
             X = matrix(
-              apply(X = currentDetectable, MARGIN = 1, FUN = "==", hereDetected), 
+              apply(X = currentDetectable, MARGIN = 1, FUN = "==", hereDetected),
               nrow = length(hereDetected)),
             MARGIN = 2, FUN = all)
         )
@@ -271,7 +284,7 @@ optimiseSD_global = function(
       }
     }
     if (!is.na(nameSave)){
-      save(SDsensors, file = paste0(nameSave, "_SDsensors.Rdata"))      
+      save(SDsensors, file = paste0(nameSave, "_SDsensors.Rdata"))
       if (verbatim){
         print(paste0("All locations that are equivalent sensors have been determined and saved at ", nameSave, "_SDsensors.Rdata"))
       }
@@ -279,34 +292,34 @@ optimiseSD_global = function(
 
     # generate all relevant sensor combinations
     ## number of combination
-    nCand = matrix(nrow = length(SDsensors), ncol = aimNumber)
+    nCand = matrix(nrow = length(SDsensors), ncol = aimNumberNF)
     for(k in seq(along = SDsensors)){
-      nCand[k,] = sapply(SDsensors[[k]], length) 
+      nCand[k,] = sapply(SDsensors[[k]], length)
     }
-    
-    SDmatrix = matrix(nrow = sum(apply(nCand, 1, prod)), ncol = aimNumber)
+
+    SDmatrix = matrix(nrow = sum(apply(nCand, 1, prod)), ncol = aimNumberNF)
     m = 0
     for (k in seq(along = nCand[,1])){
-      # 1st sensors 
-      SDmatrix[m + 1:prod(nCand[k,]), 1] = rep(SDsensors[[k]][[1]], each = prod(nCand[k,-1]))  
-      if (aimNumber > 2){ 
-        # 2nd - (aimNumber -1)st sensors
-        for(l in 2:(aimNumber - 1)){
-          SDmatrix[m + 1:prod(nCand[k,]), l] = 
+      # 1st sensors
+      SDmatrix[m + 1:prod(nCand[k,]), 1] = rep(SDsensors[[k]][[1]], each = prod(nCand[k,-1]))
+      if (aimNumberNF > 2){
+        # 2nd - (aimNumberNF -1)st sensors
+        for(l in 2:(aimNumberNF - 1)){
+          SDmatrix[m + 1:prod(nCand[k,]), l] =
             rep(
-              rep(SDsensors[[k]][[l]], each = prod(nCand[k,(l + 1):aimNumber])), 
+              rep(SDsensors[[k]][[l]], each = prod(nCand[k,(l + 1):aimNumberNF])),
               times = prod(nCand[1:(l-1)]))
-        }        
+        }
       }
-      # aimNumber-st sensor
-      SDmatrix[m + 1:prod(nCand[k,]), aimNumber] = 
-        rep(SDsensors[[k]][[aimNumber]], prod(nCand[k,-aimNumber]))
-      m = m + prod(nCand[k,]) 
+      # aimNumberNF-st sensor
+      SDmatrix[m + 1:prod(nCand[k,]), aimNumberNF] =
+        rep(SDsensors[[k]][[aimNumberNF]], prod(nCand[k,-aimNumberNF]))
+      m = m + prod(nCand[k,])
     }
     if (!is.matrix(SDmatrix)){
       SDmatrix = matrix(SDmatrix, nrow = 1)
     }
-    # make them unique (when including equal locations, some of them may have been used earlier and should not be in; they need deletion afterwards)   
+    # make them unique (when including equal locations, some of them may have been used earlier and should not be in; they need deletion afterwards)
     sorted = t(apply(SDmatrix, 1, sort))
     duplicated = duplicated(sorted)
     SDmatrix = SDmatrix[!duplicated,, drop = FALSE]
@@ -320,7 +333,7 @@ optimiseSD_global = function(
     # test if all optimal (they all should be it anyway)
     nDetections = integer(nrow(SDmatrix))
     for(k in seq(along = SDmatrix[,1])){
-      nDetections[k] = 
+      nDetections[k] =
         sum(apply(detectable[SDmatrix[k,],, drop = FALSE], 2, any))
     }
     isOptimal = nDetections == allOptimalDesign[["lowerLimit"]]
@@ -331,28 +344,35 @@ optimiseSD_global = function(
       SDmatrixOpt = SDmatrix
     }
    if (!is.na(nameSave)){
-     save(SDmatrix, SDmatrixOpt, file = paste0(nameSave,"_SDmatrix.Rdata"))   
+     save(SDmatrix, SDmatrixOpt, file = paste0(nameSave,"_SDmatrix.Rdata"))
    }
-  }     
+  }
   # until here locations in SD/SDmatrix refer to detectable as used as input to completeSearch,
   # it ignores previous deleting of locations (fix, all)
   if (!findAllOptima){
     SD = matrix(locationsAll[SD], nrow = 1)
   } else {
-    SD = matrix(locationsAll[SDmatrixOpt], ncol = aimNumber)
+    SD = matrix(locationsAll[SDmatrixOpt], ncol = aimNumberNF)
   }
-  
+  SDf = matrix(nrow = nrow(SD), ncol = ncol(SD) + length(locationsFix))
+    for (i in seq(along = SD[,1])){
+      SDf[i,1:ncol(SD)] = SD[i,]
+      if (length(locationsFix) > 0){
+        SDf[i,ncol(SD) + 1:length(locationsFix)] = locationsFix
+      }
+      SDf[i,] = sort(SDf[i,])
+    }
+
   # cost: fraction of missed plumes
   simulationsAtSensors = subset(detectableSim, locations = c(SD[1,], locationsFix))
-  cost = (nPlumes(simulations) - sum(apply(matrix(getValues(simulationsAtSensors@values), 
-                                                  byrow = TRUE, ncol = nPlumes(simulations)), 
-                                           2, any)))/
-    nPlumes(simulations)
-  
+  cost = (nPlumes(simulations) - sum(apply(matrix(getValues(simulationsAtSensors@values),
+                                                  byrow = TRUE, ncol = nPlumes(simulations)),
+                                           2, any)))/nPlumes(simulations)
+  evaluation = data.frame(cost = cost, number = ncol(SD))
   # ---------------- output ------------------------------------ #
   result = list()
-  result[["SD"]] = SD
-  result[["cost"]] = cost
+  result[["SD"]] = list(SDf)
+  result[["evaluation"]] = evaluation
   result[["report"]] = list()
   result[["report"]][["detectable"]] = detectable
   result[["report"]][["first"]] = firstOptimalDesign
@@ -367,7 +387,7 @@ optimiseSD_global = function(
 #     result[["cost"]] = cost # allOptimalDesign[["lowerLimit"]]
 #     result[["report"]] = list()
 #     result[["report"]][["first"]] = firstOptimalDesign
-#       
+#
 #   } else {
 #     result[["SD"]] = SD #firstOptimalDesign[["finalSD"]][length(firstOptimalDesign[["finalSD"]]),] # last design is the optimal one
 #     result[["cost"]] = #firstOptimalDesign[["lowerLimit"]] - 1

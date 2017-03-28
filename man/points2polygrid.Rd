@@ -51,8 +51,10 @@ regularPoints = coordinates(SPolygridDF)
 irregularPoints = regularPoints + runif(12, 0.1)
 
 # grid for regular points
-newSPolygrid_reg = points2polygrid(points = regularPoints, data = data.frame(a = 12:1 * 5))
-spplot(newSPolygrid_reg, sp.layout = list(list("sp.points", regularPoints, col = 3)))
+newSPolygrid_reg = points2polygrid(points = regularPoints, 
+                                   data = data.frame(a = 12:1 * 5))
+spplot(newSPolygrid_reg, 
+       sp.layout = list(list("sp.points", regularPoints, col = 3)))
        
 # generate grid for irregular points with given resolution
 newSPolygrid_irreg = points2polygrid(points = irregularPoints, tolerance = 0.5)

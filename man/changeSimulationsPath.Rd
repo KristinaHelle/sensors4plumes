@@ -33,9 +33,12 @@ If \code{simulations} is in memory, it has no effect.
 library(sensors4plumesData)
 data(radioactivePlumes_area)
 radioactivePlumes_area = changeSimulationsPath(radioactivePlumes_area,
-c(paste0(path.package("sensors4plumesData"),"/extdata/radioactivePlumes_area_finaldose.grd"),
-  paste0(path.package("sensors4plumesData"),"/extdata/radioactivePlumes_area_maxdose.grd"),
-  paste0(path.package("sensors4plumesData"),"/extdata/radioactivePlumes_area_time.grd"))
+c(paste0(path.package("sensors4plumesData"),
+          "/extdata/radioactivePlumes_area_finaldose.grd"),
+  paste0(path.package("sensors4plumesData"),
+          "/extdata/radioactivePlumes_area_maxdose.grd"),
+  paste0(path.package("sensors4plumesData"),
+          "/extdata/radioactivePlumes_area_time.grd"))
 )
 }
 

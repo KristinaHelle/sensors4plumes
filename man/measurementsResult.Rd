@@ -30,7 +30,7 @@ It is a general cost function, after specifying some parameters via \code{\link{
   \code{"costPlumes"}: result of \code{fun_p}, a matrix where each row represents a plume.
 }
 
-\author{ kristina.helle@uni-muenster.de  }
+\author{ Kristina B. Helle, \email{kristina.helle@uni-muenster.de} }
 
 \examples{
 demo(radioactivePlumes_addProperties)
@@ -38,7 +38,7 @@ demo(radioactivePlumes_addProperties)
 # sensor locations
 sampleLocations1 = sample.int(nLocations(radioactivePlumes), 10)
 
-# modify 'measurementResult' to cost function 'singleDetection' 
+# modify 'measurementsResult' to cost function 'singleDetection' 
 singleDetection = replaceDefault(measurementsResult, newDefaults = list(
   kinds = "detectable",
   fun_p = function(x, nout = 1){
@@ -59,7 +59,7 @@ singleDetection = replaceDefault(measurementsResult, newDefaults = list(
     locations = sampleLocations1) 
     
 # results
-# global cost: fraction of nondetected plumes, weighted by their total dose:
+# global cost: fraction of non detected plumes, weighted by their total dose:
 singleDetection1[["cost"]] 
 singleDetection1[["costPlumes"]] # for each plume if it is detected (0) or not (1)
 }

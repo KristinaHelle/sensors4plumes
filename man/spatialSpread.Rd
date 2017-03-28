@@ -35,12 +35,8 @@ List
 \examples{
 # prepare data and functions
 data(radioactivePlumes)
+data(medianVariogram)
 
-medianVariogram = fitMedianVariogram(
-  simulations = radioactivePlumes, 
-  plumes = 1:nPlumes(radioactivePlumes),
-  locations = sample.int(nLocations(radioactivePlumes), 500),
-  kinds = 1)
 krigingVarianceMedian = 
   replaceDefault(krigingVariance, newDefaults = list(model = medianVariogram))[["fun"]]
 
@@ -64,6 +60,8 @@ spatialSpread_krigingVar = spatialSpread(
   )
 
 # plot maps
+\dontrun{
+## takes some seconds
 y = radioactivePlumes@locations
 y@data$minDist = spatialSpread_minDist[["costLocations"]]
 y@data$krigVar = spatialSpread_krigingVar[["costLocations"]]
@@ -77,5 +75,5 @@ spplot(y, zcol = "minDist",
 spplot(y, zcol = "krigVar", 
        sp.layout = list("sp.points", yPoints[locationsSensors,], 
                           col = 3))
-                          
+}
 }

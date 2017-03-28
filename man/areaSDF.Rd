@@ -31,8 +31,8 @@ areaSDF(x)
 \value{
 Vector of the areas of elements of the \code{SpatialDataFrame} (same length as the \code{SpatialDataFrame}): \cr
 \code{SpatialIndexDataFrame}, \code{SpatialPointsDataFrame}: 0s, with warning. \cr
-\code{SpatialPixelsDataFrame}, \code{SpatialGridDataFrame}: cellsize, repeated for each cell \cr
-\code{SpatialPolygridDataFrame}: sum of cellsizes of all cells related to the respective index value \cr
+\code{SpatialPixelsDataFrame}, \code{SpatialGridDataFrame}: cell size, repeated for each cell \cr
+\code{SpatialPolygridDataFrame}: sum of cell sizes of all cells related to the respective index value \cr
 \code{SpatialPolygonsDataFrame}: sum of area of all polygons related to the respective \code{Polygons} object \cr
 \code{SpatialLinesDataFrame}: sum of length of lines related to the respective \code{Lines} object
 }

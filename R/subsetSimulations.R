@@ -31,8 +31,9 @@ subset.Simulations = function(
   kinds , # 1:nlayers(simulations@values)index of simulations@values to extract
   dataLocations , #  1:ncol(simulations@locations@data)columns of simulations@locations@data
   dataPlumes, #1:ncol(simulations@plumes)columns of simulations@plumes
-  saveName, # where to save the file if necessary
-  saveDir = ".",
+  nameSave = NA,
+#  saveName, # where to save the file if necessary
+#  saveDir = ".",
   overwrite = FALSE,
   valuesOnly = FALSE # then only the values are subsetted and returned; only in this case multiple locations and plumes are taken into account; else they are ignored
 ){
@@ -120,11 +121,12 @@ subset.Simulations = function(
 
     if(bs_out$n > 1){# then saving to disk is necessary
       # if no saveName given, create random name extension
-      if (missing(saveName)){
-        randName = tempfile(pattern = paste("simulations_", layerNames[1], "_", sep = ""), tmpdir = saveDir, fileext = ".grd")
-        saveName = strsplit(strsplit(randName, paste(getwd(), "\\\\", "simulations_", layerNames[1], "_", sep = ""))[[1]][2], ".grd")[[1]]
+      if (is.na(nameSave)){
+        stop("Data needs to be saved to disk as they are too big to be processed in memory, please indicate 'nameSave'.")
+        # randName = tempfile(pattern = paste("simulations_", layerNames[1], "_", sep = ""), tmpdir = saveDir, fileext = ".grd")
+        # saveName = strsplit(strsplit(randName, paste(getwd(), "\\\\", "simulations_", layerNames[1], "_", sep = ""))[[1]][2], ".grd")[[1]]
       }  
-      warning(paste("Values are saved to disk:", saveDir, "/simulations_", layerNames, "_", saveName, ".grd; ", sep = ""))
+      warning(paste("Values are saved to disk:", nameSave, "_", layerNames, ".grd; ", sep = ""))
     }
     
     values_new = list()
@@ -165,7 +167,7 @@ subset.Simulations = function(
         if (bs_out$n > 1){ # in this case create new file for output
           values_new[[layerNames[i]]] = 
             writeStart(values_new[[layerNames[i]]],
-                       filename = paste(saveDir, "/simulations_", layerNames[i], "_", saveName, ".grd", sep = ""), overwrite = overwrite)          
+                       filename = paste0(nameSave, "_", layerNames[i], ".grd"), overwrite = overwrite)          
         }
         k = 1
         for (j in 1:bs$n){
