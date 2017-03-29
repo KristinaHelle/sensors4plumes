@@ -17,8 +17,8 @@ The package provides functions to load such simulations automatically. To handle
 \tabular{ll}{
 Package: \tab sensors4plumes\cr
 Type: \tab Package\cr
-Version: \tab 0.0.1\cr
-Date: \tab 2014-11-18\cr
+Version: \tab 0.9\cr
+Date: \tab 2017-03-28\cr
 License: \tab \cr
 }
 %The package can use simulation data both from GeoTiff and ascii files. If the data are too big to be loaded into memory, functionality of the \link{raster} package is used to handle it. A set of functions like \link{extractValues} help to load the data and turn it into an appropriate form for further computations.
